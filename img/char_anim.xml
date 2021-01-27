@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker https://www.codeandweb.com/texturepacker -->
+<!-- $TexturePacker:SmartUpdate:94ce5b839f3ce5e6d9e1f73c0647c1b8:53cff2ae95c6f6b7fe241ac77b17f60b:d0d0a6817b02389d011a28ee330b615e$ -->
+<!--Format:
+n  => name of the sprite
+x  => sprite x pos in texture
+y  => sprite y pos in texture
+w  => sprite width (may be trimmed)
+h  => sprite height (may be trimmed)
+pX => x pos of the pivot point (relative to sprite width)
+pY => y pos of the pivot point (relative to sprite height)
+oX => sprite's x-corner offset (only available if trimmed)
+oY => sprite's y-corner offset (only available if trimmed)
+oW => sprite's original width (only available if trimmed)
+oH => sprite's original height (only available if trimmed)
+r => 'y' only set if sprite is rotated
+with polygon mode enabled:
+vertices   => points in sprite coordinate system (x0,y0,x1,y1,x2,y2, ...)
+verticesUV => points in sheet coordinate system (x0,y0,x1,y1,x2,y2, ...)
+triangles  => sprite triangulation, 3 vertex indices per triangle
+-->
+<TextureAtlas imagePath="char_anim.png" width="126" height="84">
+    <sprite n="atk_bk0.png" x="17" y="0" w="17" h="20"/>
+    <sprite n="atk_bk1.png" x="0" y="0" w="17" h="19"/>
+    <sprite n="atk_bk2.png" x="34" y="0" w="15" h="20"/>
+    <sprite n="atk_bk3.png" x="49" y="0" w="15" h="20"/>
+    <sprite n="atk_fr0.png" x="64" y="0" w="16" h="20"/>
+    <sprite n="atk_fr1.png" x="59" y="60" w="16" h="22"/>
+    <sprite n="atk_fr2.png" x="88" y="60" w="16" h="24"/>
+    <sprite n="atk_fr3.png" x="104" y="60" w="16" h="24"/>
+    <sprite n="atk_lt0.png" x="75" y="60" w="13" h="22"/>
+    <sprite n="atk_lt1.png" x="39" y="60" w="20" h="21"/>
+    <sprite n="atk_lt2.png" x="80" y="0" w="18" h="20"/>
+    <sprite n="atk_lt3.png" x="98" y="0" w="18" h="20"/>
+    <sprite n="atk_rt0.png" x="0" y="20" w="16" h="20"/>
+    <sprite n="atk_rt1.png" x="16" y="20" w="20" h="20"/>
+    <sprite n="atk_rt2.png" x="36" y="20" w="15" h="20"/>
+    <sprite n="atk_rt3.png" x="51" y="20" w="15" h="20"/>
+    <sprite n="walk_bk0.png" x="66" y="20" w="15" h="20"/>
+    <sprite n="walk_bk1.png" x="81" y="20" w="15" h="20"/>
+    <sprite n="walk_bk2.png" x="96" y="20" w="15" h="20"/>
+    <sprite n="walk_bk3.png" x="111" y="20" w="15" h="20"/>
+    <sprite n="walk_fr0.png" x="0" y="40" w="15" h="20"/>
+    <sprite n="walk_fr1.png" x="15" y="40" w="15" h="20"/>
+    <sprite n="walk_fr2.png" x="30" y="40" w="15" h="20"/>
+    <sprite n="walk_fr3.png" x="45" y="40" w="15" h="20"/>
+    <sprite n="walk_lt0.png" x="60" y="40" w="13" h="20"/>
+    <sprite n="walk_lt1.png" x="73" y="40" w="13" h="20"/>
+    <sprite n="walk_lt2.png" x="86" y="40" w="13" h="20"/>
+    <sprite n="walk_lt3.png" x="99" y="40" w="13" h="20"/>
+    <sprite n="walk_rt0.png" x="112" y="40" w="13" h="20"/>
+    <sprite n="walk_rt1.png" x="0" y="60" w="13" h="20"/>
+    <sprite n="walk_rt2.png" x="13" y="60" w="13" h="20"/>
+    <sprite n="walk_rt3.png" x="26" y="60" w="13" h="20"/>
+</TextureAtlas>
