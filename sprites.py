@@ -47,6 +47,7 @@ class Spritesheet:
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = PLAYER_LAYER
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -58,7 +59,9 @@ class Player(pg.sprite.Sprite):
         self.load_atk()
         self.image = self.standing[0]
         self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
         self.hit_rect = PLAYER_HIT_RECT
+        self.hit_rect.center = self.rect.center
         self.vel = vec(0, 0)
         self.pos = vec(x, y)
 
@@ -111,11 +114,9 @@ class Player(pg.sprite.Sprite):
             self.game.spritesheet.get_image(64, 0, 16, 20),
             self.game.spritesheet.get_image(59, 60, 16, 22),
             self.game.spritesheet.get_image(88, 60, 16, 24),
-            self.game.spritesheet.get_image(104, 60, 16, 24),
-            self.stand_fr]
+            self.game.spritesheet.get_image(104, 60, 16, 24)]
         for frame in self.atk_fr:
             frame.set_colorkey(BLACK)
-            pg.transform.scale(frame, (TILESIZE, TILESIZE))
 
         self.atk_bk = [
             self.game.spritesheet.get_image(17, 0, 17, 20),
@@ -124,7 +125,6 @@ class Player(pg.sprite.Sprite):
             self.game.spritesheet.get_image(49, 0, 15, 20)]
         for frame in self.atk_bk:
             frame.set_colorkey(BLACK)
-            pg.transform.scale(frame, (TILESIZE, TILESIZE))
 
         self.atk_lt = [
             self.game.spritesheet.get_image(75, 60, 13, 22),
@@ -133,7 +133,6 @@ class Player(pg.sprite.Sprite):
             self.game.spritesheet.get_image(98, 0, 18, 20)]
         for frame in self.atk_lt:
             frame.set_colorkey(BLACK)
-            pg.transform.scale(frame, (TILESIZE, TILESIZE))
 
         self.atk_rt = [
             self.game.spritesheet.get_image(0, 20, 16, 20),
@@ -142,14 +141,14 @@ class Player(pg.sprite.Sprite):
             self.game.spritesheet.get_image(51, 20, 15, 20)]
         for frame in self.atk_rt:
             frame.set_colorkey(BLACK)
-            pg.transform.scale(frame, (TILESIZE, TILESIZE))
 
     def get_keys(self):
         self.vel = vec(0, 0)
         keys = pg.key.get_pressed()
 
         # Attack keys
-        if pg.KEYDOWN == pg.K_RSHIFT or pg.KEYDOWN == pg.K_LSHIFT:
+        # if pg.KEYDOWN == pg.K_RSHIFT or pg.KEYDOWN == pg.K_LSHIFT:
+        if keys[pg.K_SPACE]:
             self.attacking = True
         else:
             self.attacking = False
@@ -170,7 +169,7 @@ class Player(pg.sprite.Sprite):
         # self.atk_anim()
         self.get_keys()
         self.move_anim()
-        self.atk_anim()
+        # self.atk_anim()
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
         self.pos += self.vel * self.game.dt
@@ -181,8 +180,10 @@ class Player(pg.sprite.Sprite):
         self.rect.center = self.hit_rect.center
 
     def move_anim(self):
+        keys = pg.key.get_pressed()
         now = pg.time.get_ticks()
         pg.key.set_repeat(500, 100)
+
         if self.vel.x != 0 or self.vel.y != 0:
             self.walking = True
         else:
@@ -196,44 +197,40 @@ class Player(pg.sprite.Sprite):
                     self.current_frame + 1) % len(self.walk_fr)
                 if self.vel.x > 0:
                     self.image = self.walk_rt[self.current_frame]
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_rt[self.current_frame]
                 elif self.vel.x < 0:
                     self.image = self.walk_lt[self.current_frame]
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_lt[self.current_frame]
                 elif self.vel.y > 0:
                     self.image = self.walk_fr[self.current_frame]
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_fr[self.current_frame]
                 elif self.vel.y < 0:
                     self.image = self.walk_bk[self.current_frame]
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_bk[self.current_frame]
 
-        """if self.attacking:
+        if not self.walking:
             if now - self.last_update > 180:
                 self.last_update = now
                 self.current_frame = (
-                    self.current_frame + 1) % len(self.walk_fr)
-                if self.image in self.walk_fr:
-                    self.image = self.atk_fr[self.current_frame]
-                elif self.image in self.walk_bk:
-                    self.image = self.atk_bk[self.current_frame]
-                elif self.image in self.walk_lt:
-                    self.image = self.atk_lt[self.current_frame]
-                elif self.image in self.walk_rt:
-                    self.image = self.atk_rt[self.current_frame]"""
-
-    def atk_anim(self):
-        now = pg.time.get_ticks()
-
-        # Show attack animation
-        if self.attacking:
-            self.walking = False
-            if now - self.last_update > 180:
-                self.current_frame = (
-                    self.current_frame + 1) % len(self.atk_fr)
-                if self.current_frame in self.walk_fr or self.image == self.stand_fr:
-                    self.image = self.atk_fr[self.current_frame]
-                elif self.image in self.walk_bk:
-                    self.image = self.atk_bk[self.current_frame]
-                elif self.image in self.walk_lt:
-                    self.image = self.atk_lt[self.current_frame]
-                elif self.image in self.walk_rt:
-                    self.image = self.atk_rt[self.current_frame]
+                    self.current_frame + 1) % len(self.standing)
+                if self.image == self.stand_fr or self.image in self.walk_fr:
+                    if self.attacking:
+                        self.image = self.atk_fr[self.current_frame]
+                    if not self.attacking:
+                        self.image == self.stand_fr
+                elif self.image == self.stand_bk or self.image in self.walk_bk:
+                    if self.attacking:
+                        self.image = self.atk_bk[self.current_frame]
+                elif self.image == self.stand_lt or self.image in self.walk_lt:
+                    if self.attacking:
+                        self.image = self.atk_lt[self.current_frame]
+                elif self.image == self.stand_rt or self.image in self.walk_rt:
+                    if self.attacking:
+                        self.image = self.atk_rt[self.current_frame]
 
 
 class Wall(pg.sprite.Sprite):

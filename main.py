@@ -11,7 +11,7 @@ class Game:
     def __init__(self):
         # initialize pygame and create game window
         pg.init()
-        pg.mixer.init()
+        # pg.mixer.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
@@ -22,25 +22,29 @@ class Game:
 
     # noinspection PyShadowingNames,PyAttributeOutsideInit
     def load_data(self):
+        """Load game images and sounds"""
         game_dir = path.dirname(__file__)
         img_dir = path.join(game_dir, 'img')
+        music_dir = path.join(game_dir, 'music')
         map_dir = path.join(game_dir, 'maps')
+
         self.map = TiledMap(path.join(map_dir, 'map1.tmx'))
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
+
         self.player_img = pg.image.load(
             path.join(img_dir, PLAYER_IMG)).convert_alpha()
-        self.wall_img = pg.image.load(
-            path.join(img_dir, WALL_IMG)).convert_alpha()
-        self.wall_img = pg.transform.scale(self.wall_img, (TILESIZE, TILESIZE))
 
         # Load spritesheet image
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
 
+        # Load sound
+        pg.mixer.music.load(path.join(music_dir, BG_MUSIC))
+
     # noinspection PyAttributeOutsideInit
     def new(self):
-        # Initialize all variables and do all setup for a new game
-        self.all_sprites = pg.sprite.Group()
+        """Initialize all variables and do all setup for a new game"""
+        self.all_sprites = pg.sprite.LayeredUpdates()
         self.walls = pg.sprite.Group()
 
         for tile_object in self.map.tmxdata.objects:
@@ -55,12 +59,11 @@ class Game:
         self.camera = Camera(self.map.width, self.map.height)
         self.draw_debug = False
 
-        # pg.mixer.music.load(path.join(self.snd_dir, '"soundfile".ogg'))
-
     # noinspection PyAttributeOutsideInit
     def run(self):
-        # Game loop - set self.playing = False to end the game
+        """Game loop - set self.playing = False to end the game"""
         self.playing = True
+        pg.mixer.music.play(loops=-1)
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
@@ -72,7 +75,7 @@ class Game:
         sys.exit()
 
     def update(self):
-        # Update portion of the game loop
+        """Update portion of the game loop"""
         self.all_sprites.update()
         self.camera.update(self.player)
 

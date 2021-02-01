@@ -23,16 +23,22 @@ WIDTH = 1024    # 16 * 64 or 32 * 32 or 64 * 16
 HEIGHT = 786    # 16 * 48 or 32 * 24 or 64 * 12
 FPS = 60
 FONT_NAME = 'arial'
-# HS_FILE = "highscore.txt"
 
 TILESIZE = 32   # Larger tilesize = closer camera
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 
-WALL_IMG = 'wall_rock_mid1.png'
-GRASS_IMG = 'grass.png'
+# Layers
+WALL_LAYER = 1
+PLAYER_LAYER = 2
+MOB_LAYER = 2
+EFFECTS_LAYER = 3
+ITEMS_LAYER = 1
 
 # Player settings
 PLAYER_SPEED = 300
 PLAYER_IMG = 'walk_fr0.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
+
+# Sound settings
+BG_MUSIC = 'woods1.ogg'
