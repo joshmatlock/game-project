@@ -4,7 +4,7 @@ import pygame as pg
 TITLE = "New Game"
 SPRITESHEET = "char_anim.png"
 
-# define colors
+# Define colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 DARKGREY = (40, 40, 40)
@@ -24,7 +24,7 @@ HEIGHT = 786    # 16 * 48 or 32 * 24 or 64 * 12
 FPS = 60
 FONT_NAME = 'arial'
 
-TILESIZE = 32   # Larger tilesize = closer camera
+TILESIZE = 64   # Larger tilesize = closer camera
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 
@@ -38,7 +38,7 @@ ITEMS_LAYER = 1
 # Player settings
 PLAYER_SPEED = 300
 PLAYER_IMG = 'walk_fr0.png'
-PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35)
+PLAYER_HIT_RECT = pg.Rect(0, 0, 28, 28)
 
 # Sound settings
 BG_MUSIC = 'woods1.ogg'

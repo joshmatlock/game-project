@@ -8,21 +8,23 @@ from tilemap import *
 
 
 class Game:
+    """ initialize pygame and create game window
+    """
     def __init__(self):
-        # initialize pygame and create game window
         pg.init()
         # pg.mixer.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
-        # pg.key.set_repeat(500, 100)
+        pg.key.set_repeat(500, 100)
         # self.running = True
         # self.font_name = pg.font.match_font(FONT_NAME)
         self.load_data()
 
     # noinspection PyShadowingNames,PyAttributeOutsideInit
     def load_data(self):
-        """Load game images and sounds"""
+        """ Load game images and sounds
+        """
         game_dir = path.dirname(__file__)
         img_dir = path.join(game_dir, 'img')
         music_dir = path.join(game_dir, 'music')
@@ -43,7 +45,8 @@ class Game:
 
     # noinspection PyAttributeOutsideInit
     def new(self):
-        """Initialize all variables and do all setup for a new game"""
+        """ Initialize all variables and do all setup for a new game
+        """
         self.all_sprites = pg.sprite.LayeredUpdates()
         self.walls = pg.sprite.Group()
 
@@ -61,7 +64,8 @@ class Game:
 
     # noinspection PyAttributeOutsideInit
     def run(self):
-        """Game loop - set self.playing = False to end the game"""
+        """ Game loop - set self.playing = False to end the game
+        """
         self.playing = True
         pg.mixer.music.play(loops=-1)
         while self.playing:
@@ -75,27 +79,39 @@ class Game:
         sys.exit()
 
     def update(self):
-        """Update portion of the game loop"""
+        """ Update portion of the game loop
+        """
         self.all_sprites.update()
         self.camera.update(self.player)
 
     def draw_grid(self):
+        """ Draws background grid
+        """
         for x in range(0, WIDTH, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
         for y in range(0, HEIGHT, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw(self):
+        """ Draws images to the screen
+        """
+        # Framerate display
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        # self.screen.fill(BGCOLOR)
+        # self.screen.fill(BGCOLOR) # Older code
+
+        # Apply camera
         self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
-        # self.draw_grid()
+        # self.draw_grid() # Older code
+
+        # Draws sprites to screen
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
             if self.draw_debug:
                 pg.draw.rect(
                     self.screen, CYAN, self.camera.apply_rect(
                         sprite.hit_rect), 1)
+
+        # Display for hit rect debug - 'h' key to toggle in game
         if self.draw_debug:
             for wall in self.walls:
                 pg.draw.rect(
@@ -104,7 +120,8 @@ class Game:
         pg.display.flip()
 
     def events(self):
-        # Catch all events here
+        """ Catch all events here
+        """
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()

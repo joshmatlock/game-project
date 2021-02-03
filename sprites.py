@@ -10,6 +10,8 @@ snd_dir = path.join(path.dirname(__file__), 'snd')
 
 
 def wall_collide(sprite, group, direc):
+    """ Sets up collisions for sprites and walls
+    """
     if direc == 'x':
         hits = pg.sprite.spritecollide(
             sprite, group, False, collide_hit_rect)
@@ -33,7 +35,8 @@ def wall_collide(sprite, group, direc):
 
 
 class Spritesheet:
-    # Utility class for loading and parsing spritesheets
+    """ Utility class for loading and parsing spritesheets
+    """
     def __init__(self, filename):
         self.spritesheet = pg.image.load(filename).convert()
 
@@ -41,11 +44,15 @@ class Spritesheet:
         # Grab an image out of a larger spritesheet
         image = pg.Surface((width, height))
         image.blit(self.spritesheet, (0, 0), (x, y, width, height))
-        image = pg.transform.scale(image, (TILESIZE, TILESIZE))
+        image = pg.transform.scale2x(image)
+        # image = pg.transform.scale(image, (TILESIZE, TILESIZE))
         return image
 
 
 class Player(pg.sprite.Sprite):
+    """ Defines player class - sets up player movement and attack animations
+        with corresponding keys
+        """
     def __init__(self, game, x, y):
         self._layer = PLAYER_LAYER
         self.groups = game.all_sprites
@@ -67,6 +74,8 @@ class Player(pg.sprite.Sprite):
 
     # noinspection PyAttributeOutsideInit
     def load_move(self):
+        """ Loads movement frames for animation from 'char_anim.png'
+        """
         self.stand_fr = self.game.spritesheet.get_image(0, 40, 15, 20)
         self.stand_bk = self.game.spritesheet.get_image(66, 20, 15, 20)
         self.stand_lt = self.game.spritesheet.get_image(60, 40, 13, 20)
@@ -110,6 +119,8 @@ class Player(pg.sprite.Sprite):
 
     # noinspection PyAttributeOutsideInit
     def load_atk(self):
+        """Loads attack frames for animation from 'char_anim.png'
+        """
         self.atk_fr = [
             self.game.spritesheet.get_image(64, 0, 16, 20),
             self.game.spritesheet.get_image(59, 60, 16, 22),
@@ -143,6 +154,7 @@ class Player(pg.sprite.Sprite):
             frame.set_colorkey(BLACK)
 
     def get_keys(self):
+        """Sets keys for movement and attack"""
         self.vel = vec(0, 0)
         keys = pg.key.get_pressed()
 
@@ -180,6 +192,8 @@ class Player(pg.sprite.Sprite):
         self.rect.center = self.hit_rect.center
 
     def move_anim(self):
+        """Performs movement and attack animations
+        """
         keys = pg.key.get_pressed()
         now = pg.time.get_ticks()
         pg.key.set_repeat(500, 100)
@@ -189,7 +203,6 @@ class Player(pg.sprite.Sprite):
         else:
             self.walking = False
 
-        # Show walking animation
         if self.walking:
             if now - self.last_update > 180:
                 self.last_update = now
@@ -220,8 +233,6 @@ class Player(pg.sprite.Sprite):
                 if self.image == self.stand_fr or self.image in self.walk_fr:
                     if self.attacking:
                         self.image = self.atk_fr[self.current_frame]
-                    if not self.attacking:
-                        self.image == self.stand_fr
                 elif self.image == self.stand_bk or self.image in self.walk_bk:
                     if self.attacking:
                         self.image = self.atk_bk[self.current_frame]
@@ -234,6 +245,8 @@ class Player(pg.sprite.Sprite):
 
 
 class Wall(pg.sprite.Sprite):
+    """Class to create wall objects - Currently repleced by 'Obstacle' class
+    """
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
@@ -248,6 +261,8 @@ class Wall(pg.sprite.Sprite):
 
 
 class Obstacle(pg.sprite.Sprite):
+    """Class to create impassable objects
+    """
     def __init__(self, game, x, y, w, h):
         self.groups = game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
