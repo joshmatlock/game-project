@@ -2,7 +2,9 @@ import pygame as pg
 
 # Game settings
 TITLE = "New Game"
-SPRITESHEET = "char_anim.png"
+SPRITESHEET = 'char_anim.png'
+WATERSHEET_B = 'falls_b.png'
+WATERSHEET_T = 'falls_t.png'
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -27,6 +29,8 @@ FONT_NAME = 'arial'
 TILESIZE = 64   # Larger tilesize = closer camera
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
+
+WATER_HIT_RECT = pg.Rect(0, 0, 28, 28)
 
 # Layers
 WALL_LAYER = 1

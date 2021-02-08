@@ -180,7 +180,7 @@ class Player(pg.sprite.Sprite):
     def update(self):
         # self.atk_anim()
         self.get_keys()
-        self.move_anim()
+        self.anim()
         # self.atk_anim()
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
@@ -191,7 +191,7 @@ class Player(pg.sprite.Sprite):
         wall_collide(self, self.game.walls, 'y')
         self.rect.center = self.hit_rect.center
 
-    def move_anim(self):
+    def anim(self):
         """Performs movement and attack animations
         """
         keys = pg.key.get_pressed()
@@ -242,6 +242,89 @@ class Player(pg.sprite.Sprite):
                 elif self.image == self.stand_rt or self.image in self.walk_rt:
                     if self.attacking:
                         self.image = self.atk_rt[self.current_frame]
+
+
+class FallsBtm(pg.sprite.Sprite):
+    def __init__(self, game, x, y, w, h):
+        self.groups = game.all_sprites
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.load()
+        self.image = self.game.watersheet_b.get_image(0, 0, 32, 32)
+        self.rect = self.image.get_rect()
+        self.rect = pg.Rect(x, y, w, h)
+        self.x = x
+        self.y = y
+        self.hit_rect = WATER_HIT_RECT
+        self.hit_rect.center = self.rect.center
+        self.current_frame = 0
+        self.last_update = 0
+        self.flowing = True
+
+    # noinspection PyAttributeOutsideInit
+    def load(self):
+        self.falls_b = [
+            self.game.watersheet_b.get_image(0, 0, 32, 32),
+            self.game.watersheet_b.get_image(32, 0, 32, 32),
+            self.game.watersheet_b.get_image(64, 0, 32, 32),
+            self.game.watersheet_b.get_image(96, 0, 32, 32)]
+        for frame in self.falls_b:
+            frame = pg.transform.scale(frame, (TILESIZE , TILESIZE ))
+            frame.set_colorkey(BLACK)
+
+    def anim(self):
+        now = pg.time.get_ticks()
+        if self.flowing:
+            if now - self.last_update > 180:
+                self.last_update = now
+                self.current_frame = (
+                    self.current_frame + 1) % len(self.falls_b)
+                self.image = self.falls_b[self.current_frame]
+                self.image = pg.transform.scale(self.image, (32, 32))
+
+    def update(self):
+        self.anim()
+
+
+class FallsTop(pg.sprite.Sprite):
+    def __init__(self, game, x, y, w, h):
+        self.groups = game.all_sprites
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.load()
+        self.image = self.game.watersheet_t.get_image(0, 0, 32, 32)
+        self.rect = self.image.get_rect()
+        self.rect = pg.Rect(x, y, w, h)
+        self.x = x
+        self.y = y
+        self.hit_rect = WATER_HIT_RECT
+        self.hit_rect.center = self.rect.center
+        self.current_frame = 0
+        self.last_update = 0
+        self.flowing = True
+
+    def load(self):
+        self.falls_t = [
+            self.game.watersheet_t.get_image(0, 0, 32, 32),
+            self.game.watersheet_t.get_image(32, 0, 32, 32),
+            self.game.watersheet_t.get_image(64, 0, 32, 32),
+            self.game.watersheet_t.get_image(96, 0, 32, 32)]
+        for frame in self.falls_t:
+            frame = pg.transform.scale(frame, (TILESIZE, TILESIZE))
+            frame.set_colorkey(BLACK)
+
+    def anim(self):
+        now = pg.time.get_ticks()
+        if self.flowing:
+            if now - self.last_update > 180:
+                self.last_update = now
+                self.current_frame = (
+                    self.current_frame + 1) % len(self.falls_t)
+                self.image = self.falls_t[self.current_frame]
+                self.image = pg.transform.scale(self.image, (32, 32))
+
+    def update(self):
+        self.anim()
 
 
 class Wall(pg.sprite.Sprite):

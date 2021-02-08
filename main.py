@@ -1,8 +1,6 @@
-# Tilemap game
-import pygame as pg
+""" Tilemap game """
+
 import sys
-from os import path
-from settings import *
 from sprites import *
 from tilemap import *
 
@@ -39,6 +37,8 @@ class Game:
 
         # Load spritesheet image
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
+        self.watersheet_b = Spritesheet(path.join(img_dir, WATERSHEET_B))
+        self.watersheet_t = Spritesheet(path.join(img_dir, WATERSHEET_T))
 
         # Load sound
         pg.mixer.music.load(path.join(music_dir, BG_MUSIC))
@@ -49,15 +49,26 @@ class Game:
         """
         self.all_sprites = pg.sprite.LayeredUpdates()
         self.walls = pg.sprite.Group()
+        self.water = pg.sprite.Group()
 
         for tile_object in self.map.tmxdata.objects:
             t_obj = tile_object
-            obj_list = ['wall', 'cliff', 'border', 'tree']
+            obj_list = ['wall', 'cliff', 'border',
+                        'tree', 'falls_b', 'falls_t']
+
             if t_obj.name == 'Player':
                 self.player = Player(self, t_obj.x, t_obj.y)
+
+            if t_obj.name == 'falls_b':
+                FallsBtm(self, t_obj.x, t_obj.y, t_obj.width, t_obj.height)
+
+            if t_obj.name == 'falls_t':
+                FallsTop(self, t_obj.x, t_obj.y, t_obj.width, t_obj.height)
+
             for i in obj_list:
                 if t_obj.name == i in obj_list:
-                    Obstacle(self, t_obj.x, t_obj.y, t_obj.width, t_obj.height)
+                    Obstacle(
+                        self, t_obj.x, t_obj.y, t_obj.width, t_obj.height)
 
         self.camera = Camera(self.map.width, self.map.height)
         self.draw_debug = False
