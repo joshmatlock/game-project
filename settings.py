@@ -3,6 +3,7 @@ import pygame as pg
 # Game settings
 TITLE = "New Game"
 SPRITESHEET = 'char_anim.png'
+SPIDERSHEET = 'spidersheet.png'
 WATERSHEET_B = 'falls_b.png'
 WATERSHEET_T = 'falls_t.png'
 
@@ -43,6 +44,18 @@ ITEMS_LAYER = 1
 PLAYER_SPEED = 300
 PLAYER_IMG = 'walk_fr0.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 28, 28)
+PLAYER_ATK = ['swish-7.wav', 'swish-9.wav', 'swish-10.wav']
+
+# Mob settings
+MOB_HEALTH = 100
+MOB_DMG = 10
+MOB_IMG = 'zombie1_hold.png'
+MOB_SPEEDS = [150, 100, 75, 125]
+MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
+MOB_KNOCKBACK = 20
+AVOID_RADIUS = 50
+DETECT_RADIUS = 400
+SPLAT = 'splat6.png'
 
 # Sound settings
 BG_MUSIC = 'woods1.ogg'

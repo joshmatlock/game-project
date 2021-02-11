@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker https://www.codeandweb.com/texturepacker -->
+<!-- $TexturePacker:SmartUpdate:32c77d57e94ec83ca96e808cde012419:3414d7a16000993184573a7954b34d3a:74fdf1e04e21ff23a677cf3ab53aa7e3$ -->
+<!--Format:
+n  => name of the sprite
+x  => sprite x pos in texture
+y  => sprite y pos in texture
+w  => sprite width (may be trimmed)
+h  => sprite height (may be trimmed)
+pX => x pos of the pivot point (relative to sprite width)
+pY => y pos of the pivot point (relative to sprite height)
+oX => sprite's x-corner offset (only available if trimmed)
+oY => sprite's y-corner offset (only available if trimmed)
+oW => sprite's original width (only available if trimmed)
+oH => sprite's original height (only available if trimmed)
+r => 'y' only set if sprite is rotated
+with polygon mode enabled:
+vertices   => points in sprite coordinate system (x0,y0,x1,y1,x2,y2, ...)
+verticesUV => points in sheet coordinate system (x0,y0,x1,y1,x2,y2, ...)
+triangles  => sprite triangulation, 3 vertex indices per triangle
+-->
+<TextureAtlas imagePath="spidersheet.png" width="254" height="278">
+    <sprite n="spider_bk1.png" x="0" y="191" w="42" h="42"/>
+    <sprite n="spider_bk2.png" x="84" y="191" w="42" h="42"/>
+    <sprite n="spider_bk3.png" x="126" y="191" w="42" h="42"/>
+    <sprite n="spider_bk4.png" x="41" y="150" w="42" h="41"/>
+    <sprite n="spider_bk5.png" x="168" y="191" w="42" h="42"/>
+    <sprite n="spider_bk6.png" x="39" y="110" w="41" h="40"/>
+    <sprite n="spider_bk7.png" x="210" y="191" w="42" h="42"/>
+    <sprite n="spider_bk8.png" x="0" y="233" w="42" h="42"/>
+    <sprite n="spider_bk9.png" x="80" y="110" w="41" h="40"/>
+    <sprite n="spider_bk10.png" x="42" y="191" w="42" h="42"/>
+    <sprite n="spider_dead1.png" x="83" y="150" w="42" h="41"/>
+    <sprite n="spider_dead2.png" x="76" y="72" w="38" h="38"/>
+    <sprite n="spider_dead3.png" x="34" y="0" w="34" h="34"/>
+    <sprite n="spider_dead4.png" x="0" y="0" w="34" h="33"/>
+    <sprite n="spider_fr1.png" x="125" y="150" w="42" h="41"/>
+    <sprite n="spider_fr2.png" x="42" y="233" w="42" h="42"/>
+    <sprite n="spider_fr3.png" x="208" y="233" w="46" h="45"/>
+    <sprite n="spider_fr4.png" x="84" y="233" w="42" h="42"/>
+    <sprite n="spider_fr5.png" x="162" y="110" w="41" h="40"/>
+    <sprite n="spider_fr6.png" x="126" y="233" w="41" h="42"/>
+    <sprite n="spider_fr7.png" x="203" y="110" w="41" h="40"/>
+    <sprite n="spider_fr8.png" x="0" y="150" w="41" h="40"/>
+    <sprite n="spider_fr9.png" x="167" y="233" w="41" h="42"/>
+    <sprite n="spider_fr10.png" x="121" y="110" w="41" h="40"/>
+    <sprite n="spider_lt1.png" x="68" y="0" w="36" h="36"/>
+    <sprite n="spider_lt2.png" x="114" y="72" w="39" h="38"/>
+    <sprite n="spider_lt3.png" x="167" y="150" w="41" h="41"/>
+    <sprite n="spider_lt4.png" x="140" y="0" w="36" h="36"/>
+    <sprite n="spider_lt5.png" x="176" y="0" w="35" h="36"/>
+    <sprite n="spider_lt6.png" x="0" y="72" w="38" h="37"/>
+    <sprite n="spider_lt7.png" x="211" y="0" w="35" h="36"/>
+    <sprite n="spider_lt8.png" x="0" y="36" w="35" h="36"/>
+    <sprite n="spider_lt9.png" x="153" y="72" w="39" h="38"/>
+    <sprite n="spider_lt10.png" x="104" y="0" w="36" h="36"/>
+    <sprite n="spider_rt1.png" x="35" y="36" w="35" h="36"/>
+    <sprite n="spider_rt2.png" x="192" y="72" w="39" h="38"/>
+    <sprite n="spider_rt3.png" x="208" y="150" w="41" h="41"/>
+    <sprite n="spider_rt4.png" x="105" y="36" w="36" h="36"/>
+    <sprite n="spider_rt5.png" x="141" y="36" w="36" h="36"/>
+    <sprite n="spider_rt6.png" x="0" y="110" w="39" h="38"/>
+    <sprite n="spider_rt7.png" x="177" y="36" w="35" h="36"/>
+    <sprite n="spider_rt8.png" x="212" y="36" w="35" h="36"/>
+    <sprite n="spider_rt9.png" x="38" y="72" w="38" h="37"/>
+    <sprite n="spider_rt10.png" x="70" y="36" w="35" h="36"/>
+</TextureAtlas>

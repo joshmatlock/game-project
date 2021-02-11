@@ -1,0 +1,25 @@
+""" To do list """
+
+- Add class Mob()
+- Set up hit rects and damage values for  Player / Mobs
+- Set up sprite collisions
+- Add health bars for Player / Mobs
+
+- Fix shadows on waterfall animations
+- Fix water transparency
+- Create objects for Player to pass behind
+
+- Fix Player attack animations
+- Fix Player attack sound effect
+
+- Set up movement for Mobs / NPCs
+
+- Add start screen
+- Add gameover screen
+- Add pause / menu screen
+
+- Add a second map
+- Set up travel between maps
+
+- Create inventory menu
+- Create shop interface

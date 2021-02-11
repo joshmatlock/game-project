@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="50" height="60" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="283">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="50" height="60" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="285">
  <tileset firstgid="1" source="Slates Pack.tsx"/>
  <layer id="1" name="Ground" width="50" height="60">
   <data encoding="csv">
@@ -486,6 +486,8 @@
   <object id="232" name="falls_t" x="1184" y="1792" width="32" height="32"/>
   <object id="233" name="falls_t" x="1216" y="1792" width="32" height="32"/>
   <object id="234" name="falls_t" x="1248" y="1760" width="32" height="32"/>
+  <object id="283" name="thing" x="488" y="1256" width="232" height="40"/>
+  <object id="284" x="400" y="1256" height="8"/>
  </objectgroup>
  <layer id="10" name="Small shadow" width="50" height="60">
   <data encoding="csv">

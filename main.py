@@ -9,6 +9,7 @@ class Game:
     """ initialize pygame and create game window
     """
     def __init__(self):
+        pg.mixer.pre_init(44100, -16, 1, 2048)
         pg.init()
         # pg.mixer.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -25,7 +26,6 @@ class Game:
         """
         game_dir = path.dirname(__file__)
         img_dir = path.join(game_dir, 'img')
-        music_dir = path.join(game_dir, 'music')
         map_dir = path.join(game_dir, 'maps')
 
         self.map = TiledMap(path.join(map_dir, 'map1.tmx'))
@@ -37,11 +37,22 @@ class Game:
 
         # Load spritesheet image
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
+        self.spidersheet = Spritesheet(path.join(img_dir, SPIDERSHEET))
         self.watersheet_b = Spritesheet(path.join(img_dir, WATERSHEET_B))
         self.watersheet_t = Spritesheet(path.join(img_dir, WATERSHEET_T))
 
         # Load sound
+        music_dir = path.join(game_dir, 'music')
+        snd_dir = path.join(game_dir, 'snd')
+
         pg.mixer.music.load(path.join(music_dir, BG_MUSIC))
+        self.atk_snds = pg.mixer.Sound(path.join(snd_dir, choice(PLAYER_ATK)))
+        # snd = self.atk_snds
+        # if snd.get_num_channels() > 2:
+        #     snd.stop()
+        # snd.play()
+        # self.atk_snds = pg.mixer.Sound(path.join(snd_dir, PLAYER_ATK))
+        #     s.set_volume(0.3)
 
     # noinspection PyAttributeOutsideInit
     def new(self):
@@ -50,6 +61,7 @@ class Game:
         self.all_sprites = pg.sprite.LayeredUpdates()
         self.walls = pg.sprite.Group()
         self.water = pg.sprite.Group()
+        self.mobs = pg.sprite.Group()
 
         for tile_object in self.map.tmxdata.objects:
             t_obj = tile_object
