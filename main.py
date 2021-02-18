@@ -20,6 +20,30 @@ class Game:
         # self.font_name = pg.font.match_font(FONT_NAME)
         self.load_data()
 
+    def draw_text(self, text, font_name, size, color, x, y, align='nw'):
+        font = pg.font.Font(font_name, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+        if align == 'nw':
+            text_rect.topleft = (x, y)
+        if align == 'ne':
+            text_rect.topright = (x, y)
+        if align == 'sw':
+            text_rect.bottomleft = (x, y)
+        if align == 'se':
+            text_rect.bottomright = (x, y)
+        if align == 'n':
+            text_rect.midtop = (x, y)
+        if align == 's':
+            text_rect.midbottom = (x, y)
+        if align == 'e':
+            text_rect.midright = (x, y)
+        if align == 'w':
+            text_rect.midleft = (x, y)
+        if align == 'center':
+            text_rect.center = (round(x), round(y))
+        self.screen.blit(text_surface, text_rect)
+
     # noinspection PyShadowingNames,PyAttributeOutsideInit
     def load_data(self):
         """ Load game images and sounds
@@ -28,12 +52,19 @@ class Game:
         img_dir = path.join(game_dir, 'img')
         map_dir = path.join(game_dir, 'maps')
 
+        self.title_font = path.join(img_dir, 'PARPG.ttf')
+        self.dim_screen = pg.Surface(self.screen.get_size()).convert_alpha()
+        self.dim_screen.fill((0, 0, 0, 180))
+
         self.map = TiledMap(path.join(map_dir, 'map1.tmx'))
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
 
         self.player_img = pg.image.load(
             path.join(img_dir, PLAYER_IMG)).convert_alpha()
+
+        self.mob_img = pg.image.load(
+            path.join(img_dir, MOB_IMG)).convert_alpha()
 
         # Load spritesheet image
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
@@ -70,10 +101,10 @@ class Game:
 
             if t_obj.name == 'Player':
                 self.player = Player(self, t_obj.x, t_obj.y)
-
+            if t_obj.name == 'spider':
+                self.mob = Mob(self, t_obj.x, t_obj.y)
             if t_obj.name == 'falls_b':
                 FallsBtm(self, t_obj.x, t_obj.y, t_obj.width, t_obj.height)
-
             if t_obj.name == 'falls_t':
                 FallsTop(self, t_obj.x, t_obj.y, t_obj.width, t_obj.height)
 
@@ -84,6 +115,7 @@ class Game:
 
         self.camera = Camera(self.map.width, self.map.height)
         self.draw_debug = False
+        self.paused = False
 
     # noinspection PyAttributeOutsideInit
     def run(self):
@@ -94,7 +126,8 @@ class Game:
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
-            self.update()
+            if not self.paused:
+                self.update()
             self.draw()
 
     def quit(self):
@@ -140,8 +173,16 @@ class Game:
                 pg.draw.rect(
                     self.screen, CYAN, self.camera.apply_rect(wall.rect), 1)
         # pg.draw.rect(self.screen, WHITE, self.camera.apply(self.player), 2)
+
+        # HUD functions
+        if self.paused:
+            self.screen.blit(self.dim_screen, (0, 0))
+            self.draw_text(
+                "Paused", self.title_font, 105, GREEN, WD2, HD2, align="center")
+
         pg.display.flip()
 
+    # noinspection PyAttributeOutsideInit
     def events(self):
         """ Catch all events here
         """
@@ -153,6 +194,8 @@ class Game:
                     self.quit()
                 if event.key == pg.K_h:
                     self.draw_debug = not self.draw_debug
+                if event.key == pg.K_p:
+                    self.paused = not self.paused
 
     def show_start_screen(self):
         pass

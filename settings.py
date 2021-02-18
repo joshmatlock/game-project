@@ -23,9 +23,12 @@ BROWN = (106, 55, 5)
 BGCOLOR = BROWN
 
 WIDTH = 1024    # 16 * 64 or 32 * 32 or 64 * 16
+WD2 = WIDTH / 2
 HEIGHT = 786    # 16 * 48 or 32 * 24 or 64 * 12
+HD2 = HEIGHT / 2
 FPS = 60
-FONT_NAME = 'arial'
+
+# FONT_NAME = 'arial'
 
 TILESIZE = 64   # Larger tilesize = closer camera
 GRIDWIDTH = WIDTH / TILESIZE
@@ -49,7 +52,7 @@ PLAYER_ATK = ['swish-7.wav', 'swish-9.wav', 'swish-10.wav']
 # Mob settings
 MOB_HEALTH = 100
 MOB_DMG = 10
-MOB_IMG = 'zombie1_hold.png'
+MOB_IMG = 'spider_fr1.png'
 MOB_SPEEDS = [150, 100, 75, 125]
 MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
 MOB_KNOCKBACK = 20

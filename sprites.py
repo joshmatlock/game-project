@@ -102,16 +102,6 @@ class Player(pg.sprite.Sprite):
         for frame in self.walk_bk:
             frame.set_colorkey(BLACK)
 
-        """self.walk_bk = [
-            self.game.spidersheet.get_image(0, 167, 42, 42),
-            self.game.spidersheet.get_image(0, 209, 41, 40),
-            self.game.spidersheet.get_image(0, 249, 42, 42),
-            self.game.spidersheet.get_image(0, 291, 42, 42),
-            self.game.spidersheet.get_image(0, 333, 41, 40),
-            self.game.spidersheet.get_image(0, 373, 42, 42)]
-        for frame in self.walk_bk:
-            frame.set_colorkey(BLACK)"""
-
         self.walk_lt = [
             self.game.spritesheet.get_image(60, 40, 13, 20),
             self.game.spritesheet.get_image(73, 40, 13, 20),
@@ -266,7 +256,12 @@ class Mob(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = game.mob_img.copy()
+        self.walking = False
+        self.attacking = False
+        self.current_frame = 0
+        self.last_update = 0
+        self.load_move()
+        self.image = self.stand_fr
         self.rect = self.image.get_rect()
         self.hit_rect = MOB_HIT_RECT.copy()
         self.hit_rect.center = self.rect.center
@@ -353,25 +348,25 @@ class Mob(pg.sprite.Sprite):
 
     def update(self):
         target_dist = self.target.pos - self.pos
-        if target_dist.length_squared() < DETECT_RADIUS ** 2:
-            if random() < 0.002:
-                choice(self.game.mob_snds).play()
-            self.rot = target_dist.angle_to(vec(1, 0))
-            self.image = pg.transform.rotate(self.game.mob_img, self.rot)
-            self.rect = self.image.get_rect()
-            self.rect.center = self.pos
-            self.acc = vec(1, 0).rotate(-self.rot)
-            self.avoid_mobs()
-            self.acc.scale_to_length(self.speed)
-            self.acc += self.vel * -1
-            self.vel += self.acc * self.game.dt
-            self.pos += (
-                    self.vel * self.game.dt + 0.5 * self.acc * self.game.dt**2)
-            self.hit_rect.centerx = self.pos.x
-            wall_collide(self, self.game.walls, 'x')
-            self.hit_rect.centery = self.pos.y
-            wall_collide(self, self.game.walls, 'y')
-            self.rect.center = self.hit_rect.center
+        # if target_dist.length_squared() < DETECT_RADIUS ** 2:
+        #     if random() < 0.002:
+        #         choice(self.game.mob_snds).play()
+        #     self.rot = target_dist.angle_to(vec(1, 0))
+        #     self.image = pg.transform.rotate(self.game.mob_img, self.rot)
+        #     self.rect = self.image.get_rect()
+        #     self.rect.center = self.pos
+        #     self.acc = vec(1, 0).rotate(-self.rot)
+        #     self.avoid_mobs()
+        #    # self.acc.scale_to_length(self.speed)
+        #     self.acc += self.vel * -1
+        #     self.vel += self.acc * self.game.dt
+        #     self.pos += (
+        #         self.vel * self.game.dt + 0.5 * self.acc * self.game.dt**2)
+        #     self.hit_rect.centerx = self.pos.x
+        #     wall_collide(self, self.game.walls, 'x')
+        #     self.hit_rect.centery = self.pos.y
+        #     wall_collide(self, self.game.walls, 'y')
+        #     self.rect.center = self.hit_rect.center
         if self.health <= 0:
             choice(self.game.mob_hit_snds).play()
             self.kill()
