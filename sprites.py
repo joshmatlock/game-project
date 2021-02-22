@@ -50,6 +50,21 @@ class Spritesheet:
         return image
 
 
+class CoverLayer(pg.sprite.Sprite):
+    def __init__(self, game, x, y, w, h):
+        self._layer = COVER_LAYER
+        self.groups = game.cover
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = game.cover_img
+        self.rect = pg.Rect(x, y, w, h)
+        self.x = x
+        self.y = y
+        self.rect.x = x
+        self.rect.y = y
+        self.hit_rect = self.rect.center
+
+
 class Player(pg.sprite.Sprite):
     """ Defines player class - sets up player movement and attack animations
         with corresponding keys
@@ -159,20 +174,6 @@ class Player(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         keys = pg.key.get_pressed()
 
-        # Attack keys
-        # for event in pg.KEYDOWN == pg.K_RSHIFT or pg.KEYDOWN == pg.K_LSHIFT:
-        if keys[pg.K_SPACE]:
-            snd = self.game.atk_snds
-            if snd.get_num_channels() > 2:
-                now = pg.time.get_ticks()
-                if now - self.last_update > 180:
-                    self.last_update = now
-                    snd.stop()
-                    snd.play()
-            self.attacking = True
-        else:
-            self.attacking = False
-
         # Move keys
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.vel.x = -PLAYER_SPEED
@@ -220,19 +221,33 @@ class Player(pg.sprite.Sprite):
                     self.image = self.walk_rt[self.current_frame]
                     if keys[pg.K_SPACE]:
                         self.image = self.atk_rt[self.current_frame]
+                        if self.image == self.atk_rt[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
                 elif self.vel.x < 0:
                     self.image = self.walk_lt[self.current_frame]
                     if keys[pg.K_SPACE]:
                         self.image = self.atk_lt[self.current_frame]
+                        if self.image == self.atk_lt[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
                 elif self.vel.y > 0:
                     self.image = self.walk_fr[self.current_frame]
                     if keys[pg.K_SPACE]:
-                        self.game.atk_snds.play()
                         self.image = self.atk_fr[self.current_frame]
+                        if self.image == self.atk_fr[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
                 elif self.vel.y < 0:
                     self.image = self.walk_bk[self.current_frame]
                     if keys[pg.K_SPACE]:
                         self.image = self.atk_bk[self.current_frame]
+                        if self.image == self.atk_bk[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
 
         if not self.walking and self.attacking:
             if now - self.last_update > 180:
@@ -391,7 +406,7 @@ class FallsBtm(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.load()
-        self.image = self.game.watersheet_b.get_image(0, 0, 32, 32)
+        self.image = self.game.watersheet_b.get_image(0, 0, 64, 64)
         self.rect = self.image.get_rect()
         self.rect = pg.Rect(x, y, w, h)
         self.x = x
@@ -405,12 +420,11 @@ class FallsBtm(pg.sprite.Sprite):
     # noinspection PyAttributeOutsideInit
     def load(self):
         self.falls_b = [
-            self.game.watersheet_b.get_image(0, 0, 32, 32),
-            self.game.watersheet_b.get_image(32, 0, 32, 32),
-            self.game.watersheet_b.get_image(64, 0, 32, 32),
-            self.game.watersheet_b.get_image(96, 0, 32, 32)]
+            self.game.watersheet_b.get_image(0, 0, 64, 64),
+            self.game.watersheet_b.get_image(64, 0, 64, 64),
+            self.game.watersheet_b.get_image(128, 0, 64, 64),
+            self.game.watersheet_b.get_image(192, 0, 64, 64)]
         for frame in self.falls_b:
-            # frame = pg.transform.scale(frame, (TILESIZE, TILESIZE))
             frame.set_colorkey(BLACK)
 
     def anim(self):
@@ -421,7 +435,7 @@ class FallsBtm(pg.sprite.Sprite):
                 self.current_frame = (
                     self.current_frame + 1) % len(self.falls_b)
                 self.image = self.falls_b[self.current_frame]
-                self.image = pg.transform.scale(self.image, (32, 32))
+                self.image = pg.transform.scale(self.image, (64, 64))
 
     def update(self):
         self.anim()
@@ -433,7 +447,7 @@ class FallsTop(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.load()
-        self.image = self.game.watersheet_t.get_image(0, 0, 32, 32)
+        self.image = self.game.watersheet_t.get_image(0, 0, 64, 64)
         self.rect = self.image.get_rect()
         self.rect = pg.Rect(x, y, w, h)
         self.x = x
@@ -446,12 +460,11 @@ class FallsTop(pg.sprite.Sprite):
 
     def load(self):
         self.falls_t = [
-            self.game.watersheet_t.get_image(0, 0, 32, 32),
-            self.game.watersheet_t.get_image(32, 0, 32, 32),
-            self.game.watersheet_t.get_image(64, 0, 32, 32),
-            self.game.watersheet_t.get_image(96, 0, 32, 32)]
+            self.game.watersheet_t.get_image(0, 0, 64, 64),
+            self.game.watersheet_t.get_image(64, 0, 64, 64),
+            self.game.watersheet_t.get_image(128, 0, 64, 64),
+            self.game.watersheet_t.get_image(192, 0, 64, 64)]
         for frame in self.falls_t:
-            # frame = pg.transform.scale(frame, (TILESIZE, TILESIZE))
             frame.set_colorkey(BLACK)
 
     def anim(self):
@@ -462,7 +475,7 @@ class FallsTop(pg.sprite.Sprite):
                 self.current_frame = (
                     self.current_frame + 1) % len(self.falls_t)
                 self.image = self.falls_t[self.current_frame]
-                self.image = pg.transform.scale(self.image, (32, 32))
+                self.image = pg.transform.scale(self.image, (64, 64))
 
     def update(self):
         self.anim()

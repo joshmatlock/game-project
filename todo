@@ -1,6 +1,5 @@
 """ To do list """
 
-- Add class Mob()
 - Set up hit rects and damage values for  Player / Mobs
 - Set up sprite collisions
 - Add health bars for Player / Mobs

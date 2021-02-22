@@ -11,7 +11,6 @@ class Game:
     def __init__(self):
         pg.mixer.pre_init(44100, -16, 1, 2048)
         pg.init()
-        # pg.mixer.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
@@ -56,8 +55,9 @@ class Game:
         self.dim_screen = pg.Surface(self.screen.get_size()).convert_alpha()
         self.dim_screen.fill((0, 0, 0, 180))
 
-        self.map = TiledMap(path.join(map_dir, 'map1.tmx'))
+        self.map = TiledMap(path.join(map_dir, 'redo_map1.tmx'))
         self.map_img = self.map.make_map()
+        # self.map_img = pg.transform.scale2x(self.map_img)
         self.map_rect = self.map_img.get_rect()
 
         self.player_img = pg.image.load(
@@ -65,6 +65,10 @@ class Game:
 
         self.mob_img = pg.image.load(
             path.join(img_dir, MOB_IMG)).convert_alpha()
+        self.mob_img = pg.transform.scale2x(self.mob_img)
+
+        self.cover_img = pg.image.load(
+            path.join(img_dir, BLANK_IMG)).convert_alpha()
 
         # Load spritesheet image
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
@@ -77,7 +81,7 @@ class Game:
         snd_dir = path.join(game_dir, 'snd')
 
         pg.mixer.music.load(path.join(music_dir, BG_MUSIC))
-        self.atk_snds = pg.mixer.Sound(path.join(snd_dir, choice(PLAYER_ATK)))
+        # self.atk_snds = pg.mixer.Sound(path.join(snd_dir, choice(PLAYER_ATK)))
         # snd = self.atk_snds
         # if snd.get_num_channels() > 2:
         #     snd.stop()
@@ -93,11 +97,15 @@ class Game:
         self.walls = pg.sprite.Group()
         self.water = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
+        self.cover = pg.sprite.LayeredUpdates()
 
         for tile_object in self.map.tmxdata.objects:
             t_obj = tile_object
-            obj_list = ['wall', 'cliff', 'border',
+            obj_list = ['wall', 'edge', 'border',
                         'tree', 'falls_b', 'falls_t']
+
+            if t_obj.name == 'cover':
+                CoverLayer(self, t_obj.x, t_obj.y, t_obj.width, t_obj.height)
 
             if t_obj.name == 'Player':
                 self.player = Player(self, t_obj.x, t_obj.y)
@@ -172,6 +180,9 @@ class Game:
             for wall in self.walls:
                 pg.draw.rect(
                     self.screen, CYAN, self.camera.apply_rect(wall.rect), 1)
+            for obj in self.cover:
+                pg.draw.rect(
+                    self.screen, CYAN, self.camera.apply_rect(obj.rect), 1)
         # pg.draw.rect(self.screen, WHITE, self.camera.apply(self.player), 2)
 
         # HUD functions

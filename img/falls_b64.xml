@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker https://www.codeandweb.com/texturepacker -->
-<!-- $TexturePacker:SmartUpdate:1f6ad89846aa7235dfceb7a123f9faff:48b5c632141b965b93366e423508a27f:166205c013632517aa7fc7b22c595c22$ -->
+<!-- $TexturePacker:SmartUpdate:1ccaa10c7701f9117a33cd0b55d54dda:85f76a916ef82199353752420cf1f7cb:c5f4a05585c9ba42dc20482830c01fe5$ -->
 <!--Format:
 n  => name of the sprite
 x  => sprite x pos in texture
@@ -19,9 +19,9 @@ vertices   => points in sprite coordinate system (x0,y0,x1,y1,x2,y2, ...)
 verticesUV => points in sheet coordinate system (x0,y0,x1,y1,x2,y2, ...)
 triangles  => sprite triangulation, 3 vertex indices per triangle
 -->
-<TextureAtlas imagePath="fall_b.png" width="128" height="32">
-    <sprite n="falls_b0.png" x="0" y="0" w="32" h="32"/>
-    <sprite n="falls_b1.png" x="32" y="0" w="32" h="32"/>
-    <sprite n="falls_b2.png" x="64" y="0" w="32" h="32"/>
-    <sprite n="falls_b3.png" x="96" y="0" w="32" h="32"/>
+<TextureAtlas imagePath="falls_b64.png" width="256" height="64">
+    <sprite n="falls_b64-0.png" x="0" y="0" w="64" h="64"/>
+    <sprite n="falls_b64-1.png" x="64" y="0" w="64" h="64"/>
+    <sprite n="falls_b64-2.png" x="128" y="0" w="64" h="64"/>
+    <sprite n="falls_b64-3.png" x="192" y="0" w="64" h="64"/>
 </TextureAtlas>

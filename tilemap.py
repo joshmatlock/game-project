@@ -30,13 +30,10 @@ class TiledMap:
                     tile = ti(gid)
                     if tile:
                         surface.blit(tile, (x * t_wid, y * t_hgt))
-                        # surface.blit(
-                        # pg.transform.scale2x(tile), (x * 32, y * 32))
 
     def make_map(self):
         temp_surface = pg.Surface((self.width, self.height))
         self.render(temp_surface)
-        # return pg.transform.scale2x(temp_surface)
         return temp_surface
 
 
@@ -70,4 +67,3 @@ class Camera:
         x = max(-(self.width - WIDTH), x)   # right
         y = max(-(self.height - HEIGHT), y)   # bottom
         self.camera = pg.Rect(x, y, self.width, self.height)
-

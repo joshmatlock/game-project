@@ -4,8 +4,8 @@ import pygame as pg
 TITLE = "New Game"
 SPRITESHEET = 'char_anim.png'
 SPIDERSHEET = 'spidersheet.png'
-WATERSHEET_B = 'falls_b.png'
-WATERSHEET_T = 'falls_t.png'
+WATERSHEET_B = 'falls_b64.png'
+WATERSHEET_T = 'falls_t64.png'
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -35,10 +35,13 @@ GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 
 WATER_HIT_RECT = pg.Rect(0, 0, 28, 28)
+COVER_HIT_RECT = pg.Rect(0, 0, 28, 28)
+BLANK_IMG = 'blank_tile.png'
 
 # Layers
 WALL_LAYER = 1
 PLAYER_LAYER = 2
+COVER_LAYER = 2
 MOB_LAYER = 2
 EFFECTS_LAYER = 3
 ITEMS_LAYER = 1
