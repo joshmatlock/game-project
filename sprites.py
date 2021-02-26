@@ -51,18 +51,17 @@ class Spritesheet:
 
 
 class CoverLayer(pg.sprite.Sprite):
-    def __init__(self, game, x, y, w, h):
+    def __init__(self, game, pos, img):
         self._layer = COVER_LAYER
-        self.groups = game.cover
+        self.groups = game.all_sprites, game.cover
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = game.cover_img
-        self.rect = pg.Rect(x, y, w, h)
-        self.x = x
-        self.y = y
-        self.rect.x = x
-        self.rect.y = y
-        self.hit_rect = self.rect.center
+        self.image = game.cover_images[img]
+        self.rect = self.image.get_rect()
+        self.img = img
+        self.pos = pos
+        self.rect.center = pos
+        self.hit_rect = self.rect
 
 
 class Player(pg.sprite.Sprite):

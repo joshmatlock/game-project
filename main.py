@@ -49,6 +49,7 @@ class Game:
         """
         game_dir = path.dirname(__file__)
         img_dir = path.join(game_dir, 'img')
+        cover_dir = path.join(img_dir, 'cover_img')
         map_dir = path.join(game_dir, 'maps')
 
         self.title_font = path.join(img_dir, 'PARPG.ttf')
@@ -57,7 +58,6 @@ class Game:
 
         self.map = TiledMap(path.join(map_dir, 'redo_map1.tmx'))
         self.map_img = self.map.make_map()
-        # self.map_img = pg.transform.scale2x(self.map_img)
         self.map_rect = self.map_img.get_rect()
 
         self.player_img = pg.image.load(
@@ -67,8 +67,10 @@ class Game:
             path.join(img_dir, MOB_IMG)).convert_alpha()
         self.mob_img = pg.transform.scale2x(self.mob_img)
 
-        self.cover_img = pg.image.load(
-            path.join(img_dir, BLANK_IMG)).convert_alpha()
+        self.cover_images = {}
+        for item in COVER_IMGS:
+            self.cover_images[item] = pg.image.load(
+                path.join(cover_dir, COVER_IMGS[item])).convert_alpha()
 
         # Load spritesheet image
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
@@ -97,15 +99,18 @@ class Game:
         self.walls = pg.sprite.Group()
         self.water = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
-        self.cover = pg.sprite.LayeredUpdates()
+        self.cover = pg.sprite.Group()
 
         for tile_object in self.map.tmxdata.objects:
             t_obj = tile_object
+            obj_center = vec(
+                t_obj.x + t_obj.width / 2, t_obj.y + t_obj.height / 2)
             obj_list = ['wall', 'edge', 'border',
-                        'tree', 'falls_b', 'falls_t']
+                        'nature_obs', 'falls_b', 'falls_t']
 
-            if t_obj.name == 'cover':
-                CoverLayer(self, t_obj.x, t_obj.y, t_obj.width, t_obj.height)
+            if t_obj.name in self.cover_images:
+                CoverLayer(
+                    self, obj_center, t_obj.name)
 
             if t_obj.name == 'Player':
                 self.player = Player(self, t_obj.x, t_obj.y)
@@ -161,7 +166,6 @@ class Game:
         """
         # Framerate display
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        # self.screen.fill(BGCOLOR) # Older code
 
         # Apply camera
         self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
@@ -169,6 +173,8 @@ class Game:
 
         # Draws sprites to screen
         for sprite in self.all_sprites:
+            if isinstance(sprite, Mob):
+                sprite.draw_health()
             self.screen.blit(sprite.image, self.camera.apply(sprite))
             if self.draw_debug:
                 pg.draw.rect(
@@ -182,7 +188,7 @@ class Game:
                     self.screen, CYAN, self.camera.apply_rect(wall.rect), 1)
             for obj in self.cover:
                 pg.draw.rect(
-                    self.screen, CYAN, self.camera.apply_rect(obj.rect), 1)
+                    self.screen, WHITE, self.camera.apply_rect(obj.rect), 1)
         # pg.draw.rect(self.screen, WHITE, self.camera.apply(self.player), 2)
 
         # HUD functions
