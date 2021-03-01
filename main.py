@@ -5,6 +5,23 @@ from sprites import *
 from tilemap import *
 
 
+# HUD functions
+def draw_player_health(surf, x, y, pct):
+    if pct < 0:
+        pct = 0
+    fill = pct * BAR_LENGTH
+    outline_rect = pg.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
+    fill_rect = pg.Rect(x, y, round(fill), BAR_HEIGHT)
+    if pct > 0.6:
+        col = GREEN
+    elif pct > 0.3:
+        col = YELLOW
+    else:
+        col = RED
+    pg.draw.rect(surf, col, fill_rect)
+    pg.draw.rect(surf, WHITE, outline_rect, 2)
+
+
 class Game:
     """ initialize pygame and create game window
     """
@@ -50,15 +67,12 @@ class Game:
         game_dir = path.dirname(__file__)
         img_dir = path.join(game_dir, 'img')
         cover_dir = path.join(img_dir, 'cover_img')
-        map_dir = path.join(game_dir, 'maps')
+        self.map_dir = path.join(game_dir, 'maps')
 
-        self.title_font = path.join(img_dir, 'PARPG.ttf')
+        self.title_font = path.join(img_dir, 'Catwalzhari-ywL2Y.ttf')
+        self.hud_font = path.join(img_dir, 'CardinalRegular-vmY4.ttf')
         self.dim_screen = pg.Surface(self.screen.get_size()).convert_alpha()
         self.dim_screen.fill((0, 0, 0, 180))
-
-        self.map = TiledMap(path.join(map_dir, 'redo_map1.tmx'))
-        self.map_img = self.map.make_map()
-        self.map_rect = self.map_img.get_rect()
 
         self.player_img = pg.image.load(
             path.join(img_dir, PLAYER_IMG)).convert_alpha()
@@ -77,6 +91,14 @@ class Game:
         self.spidersheet = Spritesheet(path.join(img_dir, SPIDERSHEET))
         self.watersheet_b = Spritesheet(path.join(img_dir, WATERSHEET_B))
         self.watersheet_t = Spritesheet(path.join(img_dir, WATERSHEET_T))
+
+        # Lighting effect
+        self.fog = pg.Surface((WIDTH, HEIGHT))
+        self.fog.fill(NIGHT_COLOR)
+        self.light_mask = pg.image.load(
+            path.join(img_dir, LIGHT_MASK)).convert_alpha()
+        self.light_mask = pg.transform.scale(self.light_mask, LIGHT_RADIUS)
+        self.light_rect = self.light_mask.get_rect()
 
         # Load sound
         music_dir = path.join(game_dir, 'music')
@@ -100,6 +122,9 @@ class Game:
         self.water = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
         self.cover = pg.sprite.Group()
+        self.map = TiledMap(path.join(self.map_dir, 'redo_map1.tmx'))
+        self.map_img = self.map.make_map()
+        self.map_rect = self.map_img.get_rect()
 
         for tile_object in self.map.tmxdata.objects:
             t_obj = tile_object
@@ -129,6 +154,7 @@ class Game:
         self.camera = Camera(self.map.width, self.map.height)
         self.draw_debug = False
         self.paused = False
+        self.night = False
 
     # noinspection PyAttributeOutsideInit
     def run(self):
@@ -161,6 +187,13 @@ class Game:
         for y in range(0, HEIGHT, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
+    def render_fog(self):
+        # Draw light mask (gradient) onto fog image
+        self.fog.fill(NIGHT_COLOR)
+        self.light_rect.center = self.camera.apply(self.player).center
+        self.fog.blit(self.light_mask, self.light_rect)
+        self.screen.blit(self.fog, (0, 0), special_flags=pg.BLEND_MULT)
+
     def draw(self):
         """ Draws images to the screen
         """
@@ -191,11 +224,18 @@ class Game:
                     self.screen, WHITE, self.camera.apply_rect(obj.rect), 1)
         # pg.draw.rect(self.screen, WHITE, self.camera.apply(self.player), 2)
 
+        if self.night:
+            self.render_fog()
+
         # HUD functions
+        draw_player_health(
+            self.screen, 10, 10, self.player.health / PLAYER_HEALTH)
+
         if self.paused:
             self.screen.blit(self.dim_screen, (0, 0))
             self.draw_text(
-                "Paused", self.title_font, 105, GREEN, WD2, HD2, align="center")
+                "Paused", self.title_font, 105, LIGHTBLUE, WD2, HD2,
+                align="center")
 
         pg.display.flip()
 
@@ -213,6 +253,8 @@ class Game:
                     self.draw_debug = not self.draw_debug
                 if event.key == pg.K_p:
                     self.paused = not self.paused
+                if event.key == pg.K_n:
+                    self.night = not self.night
 
     def show_start_screen(self):
         pass

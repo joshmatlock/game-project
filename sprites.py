@@ -1,3 +1,5 @@
+from itertools import chain
+
 import pygame as pg
 from os import path
 from settings import *
@@ -86,6 +88,8 @@ class Player(pg.sprite.Sprite):
         self.hit_rect.center = self.rect.center
         self.vel = vec(0, 0)
         self.pos = vec(x, y)
+        self.health = PLAYER_HEALTH
+        self.damaged = False
 
     # noinspection PyAttributeOutsideInit
     def load_move(self):
@@ -185,11 +189,22 @@ class Player(pg.sprite.Sprite):
         # if self.vel.x != 0 and self.vel.y != 0:
             # self.vel *= 0.7071            # For diagonal movement
 
+    # noinspection PyAttributeOutsideInit
+    def hit(self):
+        self.damaged = True
+        self.dmg_alpha = chain(DMG_ALPHA * 2)
+
     def update(self):
-        # self.atk_anim()
         self.get_keys()
         self.anim()
-        # self.atk_anim()
+        if self.damaged:
+            brm = pg.BLEND_RGBA_MULT
+            try:
+                self.image.fill(
+                    (255, 0, 0, next(self.dmg_alpha)), special_flags=brm)
+            except StopIteration:
+                self.damaged = False
+
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
         self.pos += self.vel * self.game.dt

@@ -53,6 +53,10 @@ PLAYER_IMG = 'walk_fr0.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 28, 28)
 PLAYER_ATK = ['swish-7.wav', 'swish-9.wav', 'swish-10.wav']
 
+PLAYER_HEALTH = 100
+BAR_LENGTH = 100        # Health bar
+BAR_HEIGHT = 20         # Health bar
+
 # Mob settings
 MOB_HEALTH = 100
 MOB_DMG = 10
@@ -63,6 +67,13 @@ MOB_KNOCKBACK = 20
 AVOID_RADIUS = 50
 DETECT_RADIUS = 400
 SPLAT = 'splat6.png'
+
+# Effects
+DMG_ALPHA = [i for i in range(0, 255, 55)]
+NIGHT_COLOR = (20, 20, 20)
+LIGHT_RADIUS = (500, 500)
+LIGHT_MASK = 'gradient_mask2.png'
+
 
 # Sound settings
 BG_MUSIC = 'woods1.ogg'
