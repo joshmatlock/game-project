@@ -74,6 +74,10 @@ class Game:
         self.dim_screen = pg.Surface(self.screen.get_size()).convert_alpha()
         self.dim_screen.fill((0, 0, 0, 180))
 
+        self.test_img = pg.image.load(
+            path.join(img_dir, TEST_IMG)).convert_alpha()
+        self.test_img = pg.transform.scale(self.test_img, (64, 64))
+
         self.player_img = pg.image.load(
             path.join(img_dir, PLAYER_IMG)).convert_alpha()
 

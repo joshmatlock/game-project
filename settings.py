@@ -50,6 +50,7 @@ SPRITESHEET = 'char_anim.png'
 P_ATK_SHEET = 'player_atk.png'
 PLAYER_SPEED = 400
 PLAYER_IMG = 'walk_fr0.png'
+TEST_IMG = 'stand_fr_test.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 28, 28)
 PLAYER_ATK = ['swish-7.wav', 'swish-9.wav', 'swish-10.wav']
 

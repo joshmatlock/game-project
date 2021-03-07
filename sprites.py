@@ -100,7 +100,8 @@ class Player(pg.sprite.Sprite):
         self.stand_lt = self.game.spritesheet.get_image(60, 40, 13, 20)
         self.stand_rt = self.game.spritesheet.get_image(112, 40, 13, 20)
         self.standing = [
-            self.stand_fr, self.stand_bk, self.stand_lt, self.stand_rt]
+            self.stand_fr, self.stand_bk, self.stand_lt, self.stand_rt
+        ]
         for frame in self.standing:
             frame.set_colorkey(BLACK)
 
@@ -108,7 +109,8 @@ class Player(pg.sprite.Sprite):
             self.game.spritesheet.get_image(0, 40, 15, 20),
             self.game.spritesheet.get_image(15, 40, 15, 20),
             self.game.spritesheet.get_image(30, 40, 15, 20),
-            self.game.spritesheet.get_image(45, 40, 15, 20)]
+            self.game.spritesheet.get_image(45, 40, 15, 20)
+        ]
         for frame in self.walk_fr:
             frame.set_colorkey(BLACK)
 
@@ -116,7 +118,8 @@ class Player(pg.sprite.Sprite):
             self.game.spritesheet.get_image(66, 20, 15, 20),
             self.game.spritesheet.get_image(81, 20, 15, 20),
             self.game.spritesheet.get_image(96, 20, 15, 20),
-            self.game.spritesheet.get_image(111, 20, 15, 20)]
+            self.game.spritesheet.get_image(111, 20, 15, 20)
+        ]
         for frame in self.walk_bk:
             frame.set_colorkey(BLACK)
 
@@ -124,7 +127,8 @@ class Player(pg.sprite.Sprite):
             self.game.spritesheet.get_image(60, 40, 13, 20),
             self.game.spritesheet.get_image(73, 40, 13, 20),
             self.game.spritesheet.get_image(86, 40, 13, 20),
-            self.game.spritesheet.get_image(99, 40, 13, 20)]
+            self.game.spritesheet.get_image(99, 40, 13, 20)
+        ]
         for frame in self.walk_lt:
             frame.set_colorkey(BLACK)
 
@@ -132,7 +136,8 @@ class Player(pg.sprite.Sprite):
             self.game.spritesheet.get_image(112, 40, 13, 20),
             self.game.spritesheet.get_image(0, 60, 13, 20),
             self.game.spritesheet.get_image(13, 60, 13, 20),
-            self.game.spritesheet.get_image(26, 60, 13, 20)]
+            self.game.spritesheet.get_image(26, 60, 13, 20)
+        ]
         for frame in self.walk_rt:
             frame.set_colorkey(BLACK)
 
@@ -144,7 +149,9 @@ class Player(pg.sprite.Sprite):
             self.game.spritesheet.get_image(64, 0, 16, 20),
             self.game.spritesheet.get_image(59, 60, 16, 22),
             self.game.spritesheet.get_image(88, 60, 16, 24),
-            self.game.spritesheet.get_image(104, 60, 16, 24)]
+            self.game.spritesheet.get_image(104, 60, 16, 24),
+            self.game.spritesheet.get_image(0, 40, 15, 20)
+        ]
         for frame in self.atk_fr:
             frame.set_colorkey(BLACK)
 
@@ -152,7 +159,9 @@ class Player(pg.sprite.Sprite):
             self.game.spritesheet.get_image(17, 0, 17, 20),
             self.game.spritesheet.get_image(0, 0, 17, 19),
             self.game.spritesheet.get_image(34, 0, 15, 20),
-            self.game.spritesheet.get_image(49, 0, 15, 20)]
+            self.game.spritesheet.get_image(49, 0, 15, 20),
+            self.game.spritesheet.get_image(66, 20, 15, 20)
+        ]
         for frame in self.atk_bk:
             frame.set_colorkey(BLACK)
 
@@ -160,7 +169,9 @@ class Player(pg.sprite.Sprite):
             self.game.spritesheet.get_image(75, 60, 13, 22),
             self.game.spritesheet.get_image(39, 60, 20, 21),
             self.game.spritesheet.get_image(80, 0, 18, 20),
-            self.game.spritesheet.get_image(98, 0, 18, 20)]
+            self.game.spritesheet.get_image(98, 0, 18, 20),
+            self.game.spritesheet.get_image(60, 40, 13, 20)
+        ]
         for frame in self.atk_lt:
             frame.set_colorkey(BLACK)
 
@@ -168,7 +179,9 @@ class Player(pg.sprite.Sprite):
             self.game.spritesheet.get_image(0, 20, 16, 20),
             self.game.spritesheet.get_image(16, 20, 20, 20),
             self.game.spritesheet.get_image(36, 20, 15, 20),
-            self.game.spritesheet.get_image(51, 20, 15, 20)]
+            self.game.spritesheet.get_image(51, 20, 15, 20),
+            self.game.spritesheet.get_image(112, 40, 13, 20)
+        ]
         for frame in self.atk_rt:
             frame.set_colorkey(BLACK)
 
@@ -180,14 +193,14 @@ class Player(pg.sprite.Sprite):
         # Move keys
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.vel.x = -PLAYER_SPEED
-        elif keys[pg.K_RIGHT] or keys[pg.K_d]:
+        if keys[pg.K_RIGHT] or keys[pg.K_d]:
             self.vel.x = PLAYER_SPEED
-        elif keys[pg.K_UP] or keys[pg.K_w]:
+        if keys[pg.K_UP] or keys[pg.K_w]:
             self.vel.y = -PLAYER_SPEED
-        elif keys[pg.K_DOWN] or keys[pg.K_s]:
+        if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.vel.y = PLAYER_SPEED
-        # if self.vel.x != 0 and self.vel.y != 0:
-            # self.vel *= 0.7071            # For diagonal movement
+        if self.vel.x != 0 and self.vel.y != 0:
+            self.vel *= 0.7071
 
     # noinspection PyAttributeOutsideInit
     def hit(self):
@@ -223,6 +236,7 @@ class Player(pg.sprite.Sprite):
 
         if self.vel.x != 0 or self.vel.y != 0:
             self.walking = True
+
         else:
             self.walking = False
 
@@ -263,19 +277,39 @@ class Player(pg.sprite.Sprite):
                             pg.mixer.Sound(
                                 path.join(snd_dir, choice(PLAYER_ATK))).play()
 
-        if not self.walking and self.attacking:
+        if not self.walking:
             if now - self.last_update > 180:
                 self.last_update = now
                 self.current_frame = (
                     self.current_frame + 1) % len(self.standing)
+
                 if self.image == self.stand_fr or self.image in self.walk_fr:
-                    self.image = self.atk_fr[self.current_frame]
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_fr[self.current_frame]
+                        if self.image == self.atk_fr[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
                 elif self.image == self.stand_bk or self.image in self.walk_bk:
-                    self.image = self.atk_bk[self.current_frame]
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_bk[self.current_frame]
+                        if self.image == self.atk_bk[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
                 elif self.image == self.stand_lt or self.image in self.walk_lt:
-                    self.image = self.atk_lt[self.current_frame]
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_lt[self.current_frame]
+                        if self.image == self.atk_lt[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
                 elif self.image == self.stand_rt or self.image in self.walk_rt:
-                    self.image = self.atk_rt[self.current_frame]
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_rt[self.current_frame]
+                        if self.image == self.atk_rt[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
 
 
 # noinspection PyAttributeOutsideInit
@@ -290,7 +324,7 @@ class Mob(pg.sprite.Sprite):
         self.current_frame = 0
         self.last_update = 0
         self.load_move()
-        self.image = self.stand_fr
+        self.image = game.mob_img.copy()
         self.rect = self.image.get_rect()
         self.hit_rect = MOB_HIT_RECT.copy()
         self.hit_rect.center = self.rect.center
