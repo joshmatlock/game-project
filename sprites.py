@@ -1,6 +1,4 @@
 from itertools import chain
-
-import pygame as pg
 from os import path
 from settings import *
 from random import choice, random
@@ -75,19 +73,21 @@ class Player(pg.sprite.Sprite):
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
+        self.standing = True
         self.walking = False
         self.attacking = False
         self.current_frame = 0
         self.last_update = 0
         self.load_move()
         self.load_atk()
-        self.image = self.standing[0]
+        self.image = self.stand[0]
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.hit_rect = PLAYER_HIT_RECT
         self.hit_rect.center = self.rect.center
         self.vel = vec(0, 0)
         self.pos = vec(x, y)
+        self.rot = 0
         self.health = PLAYER_HEALTH
         self.damaged = False
 
@@ -99,10 +99,10 @@ class Player(pg.sprite.Sprite):
         self.stand_bk = self.game.spritesheet.get_image(66, 20, 15, 20)
         self.stand_lt = self.game.spritesheet.get_image(60, 40, 13, 20)
         self.stand_rt = self.game.spritesheet.get_image(112, 40, 13, 20)
-        self.standing = [
+        self.stand = [
             self.stand_fr, self.stand_bk, self.stand_lt, self.stand_rt
         ]
-        for frame in self.standing:
+        for frame in self.stand:
             frame.set_colorkey(BLACK)
 
         self.walk_fr = [
@@ -185,8 +185,98 @@ class Player(pg.sprite.Sprite):
         for frame in self.atk_rt:
             frame.set_colorkey(BLACK)
 
+    def anim(self):
+        """Performs movement and attack animations for Player
+        """
+        keys = pg.key.get_pressed()
+        now = pg.time.get_ticks()
+        pg.key.set_repeat(500, 100)
+
+        if self.vel.x != 0 or self.vel.y != 0:
+            self.walking = True
+            self.standing = False
+        elif self.vel.x == 0 and self.vel.y == 0:
+            self.standing = True
+            self.walking = False
+
+        if self.walking:
+            if now - self.last_update > 100:
+                self.last_update = now
+                self.current_frame = (
+                    self.current_frame + 1) % len(self.walk_fr)
+
+                if self.vel.x > 0:
+                    self.image = self.walk_rt[self.current_frame]
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_rt[self.current_frame]
+                        if self.image == self.atk_rt[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
+                elif self.vel.x < 0:
+                    self.image = self.walk_lt[self.current_frame]
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_lt[self.current_frame]
+                        if self.image == self.atk_lt[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
+                elif self.vel.y > 0:
+                    self.image = self.walk_fr[self.current_frame]
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_fr[self.current_frame]
+                        if self.image == self.atk_fr[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
+                elif self.vel.y < 0:
+                    self.image = self.walk_bk[self.current_frame]
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_bk[self.current_frame]
+                        if self.image == self.atk_bk[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
+        if self.standing:
+            if now - self.last_update > 100:
+                self.last_update = now
+                self.current_frame = (
+                    self.current_frame + 1) % len(self.atk_fr)
+
+                if self.image in self.walk_fr:
+                    if keys[pg.K_SPACE]:
+                        self.current_frame = (
+                                    self.current_frame + 1) % len(self.atk_fr)
+                        self.image = self.atk_fr[self.current_frame]
+                        if self.image == self.atk_fr[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
+                elif self.image in self.walk_bk:
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_bk[self.current_frame]
+                        if self.image == self.atk_bk[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
+                elif self.image in self.walk_lt:
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_lt[self.current_frame]
+                        if self.image == self.atk_lt[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
+                elif self.image in self.walk_rt:
+                    if keys[pg.K_SPACE]:
+                        self.image = self.atk_rt[self.current_frame]
+                        if self.image == self.atk_rt[0]:
+                            pg.mixer.Sound(
+                                path.join(snd_dir, choice(PLAYER_ATK))).play()
+
+    # noinspection PyAttributeOutsideInit
     def get_keys(self):
         """Sets keys for movement and attack"""
+        # self.rot_speed = 0
         self.vel = vec(0, 0)
         keys = pg.key.get_pressed()
 
@@ -227,90 +317,6 @@ class Player(pg.sprite.Sprite):
         wall_collide(self, self.game.walls, 'y')
         self.rect.center = self.hit_rect.center
 
-    def anim(self):
-        """Performs movement and attack animations
-        """
-        keys = pg.key.get_pressed()
-        now = pg.time.get_ticks()
-        pg.key.set_repeat(500, 100)
-
-        if self.vel.x != 0 or self.vel.y != 0:
-            self.walking = True
-
-        else:
-            self.walking = False
-
-        if self.walking:
-            if now - self.last_update > 100:
-                self.last_update = now
-                self.current_frame = (
-                    self.current_frame + 1) % len(self.walk_fr)
-                if self.vel.x > 0:
-                    self.image = self.walk_rt[self.current_frame]
-                    if keys[pg.K_SPACE]:
-                        self.image = self.atk_rt[self.current_frame]
-                        if self.image == self.atk_rt[0]:
-                            pg.mixer.Sound(
-                                path.join(snd_dir, choice(PLAYER_ATK))).play()
-
-                elif self.vel.x < 0:
-                    self.image = self.walk_lt[self.current_frame]
-                    if keys[pg.K_SPACE]:
-                        self.image = self.atk_lt[self.current_frame]
-                        if self.image == self.atk_lt[0]:
-                            pg.mixer.Sound(
-                                path.join(snd_dir, choice(PLAYER_ATK))).play()
-
-                elif self.vel.y > 0:
-                    self.image = self.walk_fr[self.current_frame]
-                    if keys[pg.K_SPACE]:
-                        self.image = self.atk_fr[self.current_frame]
-                        if self.image == self.atk_fr[0]:
-                            pg.mixer.Sound(
-                                path.join(snd_dir, choice(PLAYER_ATK))).play()
-
-                elif self.vel.y < 0:
-                    self.image = self.walk_bk[self.current_frame]
-                    if keys[pg.K_SPACE]:
-                        self.image = self.atk_bk[self.current_frame]
-                        if self.image == self.atk_bk[0]:
-                            pg.mixer.Sound(
-                                path.join(snd_dir, choice(PLAYER_ATK))).play()
-
-        if not self.walking:
-            if now - self.last_update > 180:
-                self.last_update = now
-                self.current_frame = (
-                    self.current_frame + 1) % len(self.standing)
-
-                if self.image == self.stand_fr or self.image in self.walk_fr:
-                    if keys[pg.K_SPACE]:
-                        self.image = self.atk_fr[self.current_frame]
-                        if self.image == self.atk_fr[0]:
-                            pg.mixer.Sound(
-                                path.join(snd_dir, choice(PLAYER_ATK))).play()
-
-                elif self.image == self.stand_bk or self.image in self.walk_bk:
-                    if keys[pg.K_SPACE]:
-                        self.image = self.atk_bk[self.current_frame]
-                        if self.image == self.atk_bk[0]:
-                            pg.mixer.Sound(
-                                path.join(snd_dir, choice(PLAYER_ATK))).play()
-
-                elif self.image == self.stand_lt or self.image in self.walk_lt:
-                    if keys[pg.K_SPACE]:
-                        self.image = self.atk_lt[self.current_frame]
-                        if self.image == self.atk_lt[0]:
-                            pg.mixer.Sound(
-                                path.join(snd_dir, choice(PLAYER_ATK))).play()
-
-                elif self.image == self.stand_rt or self.image in self.walk_rt:
-                    if keys[pg.K_SPACE]:
-                        self.image = self.atk_rt[self.current_frame]
-                        if self.image == self.atk_rt[0]:
-                            pg.mixer.Sound(
-                                path.join(snd_dir, choice(PLAYER_ATK))).play()
-
 
 # noinspection PyAttributeOutsideInit
 class Mob(pg.sprite.Sprite):
@@ -330,7 +336,9 @@ class Mob(pg.sprite.Sprite):
         self.hit_rect.center = self.rect.center
         self.pos = vec(x, y)
         self.vel = vec(0, 0)
+        self.acc = vec(0, 0)
         self.rect.center = self.pos
+        self.rot = 0
         self.health = MOB_HEALTH
         self.speed = choice(MOB_SPEEDS)
         self.target = game.player
@@ -402,6 +410,34 @@ class Mob(pg.sprite.Sprite):
             self.game.spidersheet.get_image(0, 0, 34, 33)
         ]
 
+    def anim(self):
+        """Performs movement and attack animations for Mobs
+        """
+        now = pg.time.get_ticks()
+
+        if self.vel.x != 0 or self.vel.y != 0:
+            self.walking = True
+
+        else:
+            self.walking = False
+
+        if self.walking:
+            if now - self.last_update > 100:
+                self.last_update = now
+                self.current_frame = (
+                    self.current_frame + 1) % len(self.walk_fr)
+                if self.vel.x > 0 and self.vel.x > self.vel.y:
+                    self.image = self.walk_rt[self.current_frame]
+
+                elif self.vel.x < 0 and self.vel.x < self.vel.y:
+                    self.image = self.walk_lt[self.current_frame]
+
+                elif self.vel.y > 0 and self.vel.y > self.vel.x:
+                    self.image = self.walk_fr[self.current_frame]
+
+                elif self.vel.y < 0 and self.vel.y < self.vel.x:
+                    self.image = self.walk_bk[self.current_frame]
+
     def avoid_mobs(self):
         for mob in self.game.mobs:
             if mob != self:
@@ -411,25 +447,26 @@ class Mob(pg.sprite.Sprite):
 
     def update(self):
         target_dist = self.target.pos - self.pos
-        # if target_dist.length_squared() < DETECT_RADIUS ** 2:
-        #     if random() < 0.002:
-        #         choice(self.game.mob_snds).play()
-        #     self.rot = target_dist.angle_to(vec(1, 0))
-        #     self.image = pg.transform.rotate(self.game.mob_img, self.rot)
-        #     self.rect = self.image.get_rect()
-        #     self.rect.center = self.pos
-        #     self.acc = vec(1, 0).rotate(-self.rot)
-        #     self.avoid_mobs()
-        #    # self.acc.scale_to_length(self.speed)
-        #     self.acc += self.vel * -1
-        #     self.vel += self.acc * self.game.dt
-        #     self.pos += (
-        #         self.vel * self.game.dt + 0.5 * self.acc * self.game.dt**2)
-        #     self.hit_rect.centerx = self.pos.x
-        #     wall_collide(self, self.game.walls, 'x')
-        #     self.hit_rect.centery = self.pos.y
-        #     wall_collide(self, self.game.walls, 'y')
-        #     self.rect.center = self.hit_rect.center
+        if target_dist.length_squared() < DETECT_RADIUS ** 2:
+            # if random() < 0.002:
+            #     choice(self.game.mob_snds).play()
+            self.rot = target_dist.angle_to(vec(1, 0))
+            # self.image = pg.transform.rotate(self.game.mob_img, self.rot)
+            self.rect = self.image.get_rect()
+            self.rect.center = self.pos
+            self.acc = vec(1, 0).rotate(-self.rot)
+            self.avoid_mobs()
+            self.acc.scale_to_length(self.speed)
+            self.acc += self.vel * -1
+            self.vel += self.acc * self.game.dt
+            self.pos += (
+                self.vel * self.game.dt + 0.5 * self.acc * self.game.dt**2)
+            self.hit_rect.centerx = self.pos.x
+            wall_collide(self, self.game.walls, 'x')
+            self.hit_rect.centery = self.pos.y
+            wall_collide(self, self.game.walls, 'y')
+            self.rect.center = self.hit_rect.center
+        self.anim()
         if self.health <= 0:
             choice(self.game.mob_hit_snds).play()
             self.kill()

@@ -2,6 +2,9 @@ import pygame as pg
 
 # Game settings
 TITLE = "New Game"
+START_TXT = "Press a key to start"
+GO_TXT = "GAME OVER"
+
 SPIDERSHEET = 'spidersheet.png'
 WATERSHEET_B = 'falls_b64.png'
 WATERSHEET_T = 'falls_t64.png'
@@ -25,6 +28,7 @@ WIDTH = 1024    # 16 * 64 or 32 * 32 or 64 * 16
 WD2 = WIDTH / 2
 HEIGHT = 786    # 16 * 48 or 32 * 24 or 64 * 12
 HD2 = HEIGHT / 2
+HT34 = HEIGHT * 3 / 4
 FPS = 60
 
 # FONT_NAME = 'arial'
@@ -35,7 +39,7 @@ GRIDHEIGHT = HEIGHT / TILESIZE
 
 WATER_HIT_RECT = pg.Rect(0, 0, 28, 28)
 COVER_HIT_RECT = pg.Rect(0, 0, 28, 28)
-BLANK_IMG = 'test.png'
+# BLANK_IMG = 'test.png'
 
 # Layers
 WALL_LAYER = 1
@@ -48,10 +52,10 @@ ITEMS_LAYER = 1
 # Player settings
 SPRITESHEET = 'char_anim.png'
 P_ATK_SHEET = 'player_atk.png'
-PLAYER_SPEED = 400
+PLAYER_SPEED = 300
 PLAYER_IMG = 'walk_fr0.png'
 TEST_IMG = 'stand_fr_test.png'
-PLAYER_HIT_RECT = pg.Rect(0, 0, 28, 28)
+PLAYER_HIT_RECT = pg.Rect(0, 0, 20, 25)
 PLAYER_ATK = ['swish-7.wav', 'swish-9.wav', 'swish-10.wav']
 
 PLAYER_HEALTH = 100
@@ -62,9 +66,9 @@ BAR_HEIGHT = 20         # Health bar
 MOB_HEALTH = 100
 MOB_DMG = 10
 MOB_IMG = 'spider_fr1.png'
-MOB_SPEEDS = [150, 100, 75, 125]
-MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
-MOB_KNOCKBACK = 20
+MOB_SPEEDS = [250, 200, 175, 225]
+MOB_HIT_RECT = pg.Rect(0, 0, 60, 40)
+MOB_KNOCKBACK = 30
 AVOID_RADIUS = 50
 DETECT_RADIUS = 400
 SPLAT = 'splat6.png'

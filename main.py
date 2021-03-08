@@ -66,6 +66,8 @@ class Game:
         """
         game_dir = path.dirname(__file__)
         img_dir = path.join(game_dir, 'img')
+        snd_dir = path.join(game_dir, 'snd')
+        music_dir = path.join(game_dir, 'music')
         cover_dir = path.join(img_dir, 'cover_img')
         self.map_dir = path.join(game_dir, 'maps')
 
@@ -74,9 +76,9 @@ class Game:
         self.dim_screen = pg.Surface(self.screen.get_size()).convert_alpha()
         self.dim_screen.fill((0, 0, 0, 180))
 
-        self.test_img = pg.image.load(
-            path.join(img_dir, TEST_IMG)).convert_alpha()
-        self.test_img = pg.transform.scale(self.test_img, (64, 64))
+        # self.test_img = pg.image.load(
+        #     path.join(img_dir, TEST_IMG)).convert_alpha()
+        # self.test_img = pg.transform.scale(self.test_img, (64, 64))
 
         self.player_img = pg.image.load(
             path.join(img_dir, PLAYER_IMG)).convert_alpha()
@@ -109,7 +111,6 @@ class Game:
         snd_dir = path.join(game_dir, 'snd')
 
         pg.mixer.music.load(path.join(music_dir, BG_MUSIC))
-        # self.atk_snds = pg.mixer.Sound(path.join(snd_dir, choice(PLAYER_ATK)))
         # snd = self.atk_snds
         # if snd.get_num_channels() > 2:
         #     snd.stop()
@@ -182,6 +183,20 @@ class Game:
         """
         self.all_sprites.update()
         self.camera.update(self.player)
+
+        # Mobs hit player
+        hits = pg.sprite.spritecollide(
+            self.player, self.mobs, False, collide_hit_rect)
+        for hit in hits:
+            # if random() < 0.7:
+            #     choice(self.plr_hit_snds).play()
+            self.player.health -= MOB_DMG
+            hit.vel = vec(0, 0)
+            if self.player.health <= 0:
+                self.playing = False
+        if hits:
+            # self.player.hit()
+            self.player.pos += vec(MOB_KNOCKBACK, 0).rotate(-hits[0].rot)
 
     def draw_grid(self):
         """ Draws background grid
@@ -264,7 +279,25 @@ class Game:
         pass
 
     def show_go_screen(self):
-        pass
+        self.screen.fill(BLACK)
+        self.draw_text(
+            GO_TXT, self.title_font, 100, RED, WD2, HD2, align='center')
+        self.draw_text(
+            START_TXT, self.title_font, 50, WHITE, WD2, HT34, align='center')
+        pg.display.flip()
+        self.wait_for_key()
+
+    def wait_for_key(self):
+        pg.event.wait()
+        waiting = True
+        while waiting:
+            self.clock.tick(FPS)
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    waiting = False
+                    self.quit()
+                if event.type == pg.KEYUP:
+                    waiting = False
 
 
 # Create game object
@@ -273,6 +306,6 @@ g.show_start_screen()
 while True:
     g.new()
     g.run()
-    # g.show_go_screen()
+    g.show_go_screen()
 
 # pg.quit()
