@@ -67,7 +67,7 @@ class CoverLayer(pg.sprite.Sprite):
 class Player(pg.sprite.Sprite):
     """ Defines player class - sets up player movement and attack animations
         with corresponding keys
-        """
+    """
     def __init__(self, game, x, y):
         self._layer = PLAYER_LAYER
         self.groups = game.all_sprites
@@ -82,6 +82,7 @@ class Player(pg.sprite.Sprite):
         self.load_atk()
         self.image = self.stand[0]
         self.rect = self.image.get_rect()
+        self.mask = pg.mask.from_surface(self.image)
         self.rect.center = (x, y)
         self.hit_rect = PLAYER_HIT_RECT
         self.hit_rect.center = self.rect.center
@@ -195,7 +196,7 @@ class Player(pg.sprite.Sprite):
         if self.vel.x != 0 or self.vel.y != 0:
             self.walking = True
             self.standing = False
-        elif self.vel.x == 0 and self.vel.y == 0:
+        if self.vel.x == 0 and self.vel.y == 0:
             self.standing = True
             self.walking = False
 
@@ -205,35 +206,61 @@ class Player(pg.sprite.Sprite):
                 self.current_frame = (
                     self.current_frame + 1) % len(self.walk_fr)
 
+                # Right movement
                 if self.vel.x > 0:
                     self.image = self.walk_rt[self.current_frame]
                     if keys[pg.K_SPACE]:
                         self.image = self.atk_rt[self.current_frame]
                         if self.image == self.atk_rt[0]:
+                            fl = Flash(
+                                self.game, self.game.flash_img_rt,
+                                self.rect.centerx, self.rect.centery + 15, 10, 0)
+                            self.game.all_sprites.add(fl)
+                            self.game.flash.add(fl)
                             pg.mixer.Sound(
                                 path.join(snd_dir, choice(PLAYER_ATK))).play()
 
+                # Left movement
                 elif self.vel.x < 0:
                     self.image = self.walk_lt[self.current_frame]
                     if keys[pg.K_SPACE]:
                         self.image = self.atk_lt[self.current_frame]
                         if self.image == self.atk_lt[0]:
+                            fl = Flash(
+                                self.game, self.game.flash_img_lt,
+                                self.rect.centerx, self.rect.centery + 15, -10, 0)
+                            self.game.all_sprites.add(fl)
+                            self.game.flash.add(fl)
                             pg.mixer.Sound(
                                 path.join(snd_dir, choice(PLAYER_ATK))).play()
 
+                # Downward movement
                 elif self.vel.y > 0:
                     self.image = self.walk_fr[self.current_frame]
                     if keys[pg.K_SPACE]:
                         self.image = self.atk_fr[self.current_frame]
                         if self.image == self.atk_fr[0]:
+                            fl = Flash(
+                                self.game, self.game.flash_img_dn,
+                                self.rect.centerx, self.rect.bottom, 0, 10
+                            )
+                            self.game.all_sprites.add(fl)
+                            self.game.flash.add(fl)
                             pg.mixer.Sound(
                                 path.join(snd_dir, choice(PLAYER_ATK))).play()
 
+                # Upward movement
                 elif self.vel.y < 0:
                     self.image = self.walk_bk[self.current_frame]
                     if keys[pg.K_SPACE]:
                         self.image = self.atk_bk[self.current_frame]
                         if self.image == self.atk_bk[0]:
+                            fl = Flash(
+                                self.game, self.game.flash_img_up,
+                                self.rect.centerx,self.rect.top, 0, -10
+                            )
+                            self.game.all_sprites.add(fl)
+                            self.game.flash.add(fl)
                             pg.mixer.Sound(
                                 path.join(snd_dir, choice(PLAYER_ATK))).play()
 
@@ -243,16 +270,16 @@ class Player(pg.sprite.Sprite):
                 self.current_frame = (
                     self.current_frame + 1) % len(self.atk_fr)
 
-                if self.image in self.walk_fr:
+                if self.image == self.stand_fr or self.image in self.walk_fr:
                     if keys[pg.K_SPACE]:
-                        self.current_frame = (
-                                    self.current_frame + 1) % len(self.atk_fr)
                         self.image = self.atk_fr[self.current_frame]
                         if self.image == self.atk_fr[0]:
                             pg.mixer.Sound(
                                 path.join(snd_dir, choice(PLAYER_ATK))).play()
+                        elif self.image == self.atk_fr[3]:
+                            self.image = self.atk_fr[0]
 
-                elif self.image in self.walk_bk:
+                elif self.image == self.stand_bk in self.walk_bk:
                     if keys[pg.K_SPACE]:
                         self.image = self.atk_bk[self.current_frame]
                         if self.image == self.atk_bk[0]:
@@ -275,7 +302,8 @@ class Player(pg.sprite.Sprite):
 
     # noinspection PyAttributeOutsideInit
     def get_keys(self):
-        """Sets keys for movement and attack"""
+        """Sets keys for movement and attack
+        """
         # self.rot_speed = 0
         self.vel = vec(0, 0)
         keys = pg.key.get_pressed()
@@ -291,9 +319,12 @@ class Player(pg.sprite.Sprite):
             self.vel.y = PLAYER_SPEED
         if self.vel.x != 0 and self.vel.y != 0:
             self.vel *= 0.7071
+        if keys[pg.K_SPACE]:
+            self.attacking = True
 
     # noinspection PyAttributeOutsideInit
     def hit(self):
+        # Does not work correctly with animated Player Sprite
         self.damaged = True
         self.dmg_alpha = chain(DMG_ALPHA * 2)
 
@@ -318,6 +349,28 @@ class Player(pg.sprite.Sprite):
         self.rect.center = self.hit_rect.center
 
 
+class Flash(pg.sprite.Sprite):
+    def __init__(self, game, image, x, y, speedx, speedy):
+        self._layer = FLASH_LAYER
+        self.groups = game.all_sprites, game.flash
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.image = image
+        self.image.set_colorkey(BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.centerx = x
+        self.rect.bottom = y
+        self.speedy = speedy
+        self.speedx = speedx
+        self.damage = 100
+
+    def update(self):
+        self.rect.y += self.speedy
+        self.rect.x += self.speedx
+        # Kill if it moves off the top of the screen
+        if self.rect.bottom < 0:
+            self.kill()
+
+
 # noinspection PyAttributeOutsideInit
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -332,6 +385,7 @@ class Mob(pg.sprite.Sprite):
         self.load_move()
         self.image = game.mob_img.copy()
         self.rect = self.image.get_rect()
+        self.mask = pg.mask.from_surface(self.image)
         self.hit_rect = MOB_HIT_RECT.copy()
         self.hit_rect.center = self.rect.center
         self.pos = vec(x, y)
@@ -468,9 +522,9 @@ class Mob(pg.sprite.Sprite):
             self.rect.center = self.hit_rect.center
         self.anim()
         if self.health <= 0:
-            choice(self.game.mob_hit_snds).play()
+            # choice(self.game.mob_hit_snds).play()
             self.kill()
-            self.game.map_img.blit(self.game.splat, self.pos - vec(32, 32))
+            self.game.map_img.blit(self.game.splat, self.pos - vec(64, 64))
 
     def draw_health(self):
         if self.health > 60:

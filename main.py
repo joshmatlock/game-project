@@ -83,9 +83,21 @@ class Game:
         self.player_img = pg.image.load(
             path.join(img_dir, PLAYER_IMG)).convert_alpha()
 
+        self.flash_img_up = pg.image.load(
+            path.join(img_dir, FLASH_IMG[0])).convert_alpha()
+        self.flash_img_dn = pg.image.load(
+            path.join(img_dir, FLASH_IMG[1])).convert_alpha()
+        self.flash_img_lt = pg.image.load(
+            path.join(img_dir, FLASH_IMG[2])).convert_alpha()
+        self.flash_img_rt = pg.image.load(
+            path.join(img_dir, FLASH_IMG[3])).convert_alpha()
+
         self.mob_img = pg.image.load(
             path.join(img_dir, MOB_IMG)).convert_alpha()
         self.mob_img = pg.transform.scale2x(self.mob_img)
+        self.splat = pg.image.load(
+            path.join(img_dir, SPLAT)).convert_alpha()
+        self.splat = pg.transform.scale(self.splat, (64, 64))
 
         self.cover_images = {}
         for item in COVER_IMGS:
@@ -127,6 +139,7 @@ class Game:
         self.water = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
         self.cover = pg.sprite.Group()
+        self.flash = pg.sprite.Group()
         self.map = TiledMap(path.join(self.map_dir, 'redo_map1.tmx'))
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
@@ -197,6 +210,13 @@ class Game:
         if hits:
             # self.player.hit()
             self.player.pos += vec(MOB_KNOCKBACK, 0).rotate(-hits[0].rot)
+
+        # Flash hits Mob
+        hits = pg.sprite.groupcollide(self.mobs, self.flash, False, True)
+        for mob in hits:
+            for flash in hits[mob]:
+                mob.health -= flash.damage
+            mob.vel = vec(0, 0)
 
     def draw_grid(self):
         """ Draws background grid

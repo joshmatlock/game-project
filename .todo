@@ -6,15 +6,13 @@
 
 - Fix shadows on waterfall animations
 - Fix water transparency
-- Create objects for Player to pass behind
 
 - Fix Player attack animations
 - Fix Player attack sound effect
 
-- Set up movement for Mobs / NPCs
++ Set up movement for Mobs / NPCs
 
 - Add start screen
-- Add gameover screen
 - Add pause / menu screen
 
 - Add a second map

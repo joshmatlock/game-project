@@ -43,6 +43,7 @@ COVER_HIT_RECT = pg.Rect(0, 0, 28, 28)
 
 # Layers
 WALL_LAYER = 1
+FLASH_LAYER = 1
 PLAYER_LAYER = 2
 COVER_LAYER = 3
 MOB_LAYER = 2
@@ -57,6 +58,8 @@ PLAYER_IMG = 'walk_fr0.png'
 TEST_IMG = 'stand_fr_test.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 20, 25)
 PLAYER_ATK = ['swish-7.wav', 'swish-9.wav', 'swish-10.wav']
+WPN_DMG = 10
+WPN_HIT_RECT = pg.Rect(0, 0, 20, 20)
 
 PLAYER_HEALTH = 100
 BAR_LENGTH = 100        # Health bar
@@ -66,12 +69,12 @@ BAR_HEIGHT = 20         # Health bar
 MOB_HEALTH = 100
 MOB_DMG = 10
 MOB_IMG = 'spider_fr1.png'
+SPLAT = 'splat6.png'
 MOB_SPEEDS = [250, 200, 175, 225]
 MOB_HIT_RECT = pg.Rect(0, 0, 60, 40)
 MOB_KNOCKBACK = 30
 AVOID_RADIUS = 50
 DETECT_RADIUS = 400
-SPLAT = 'splat6.png'
 
 # Effects
 DMG_ALPHA = [i for i in range(0, 255, 55)]
@@ -108,5 +111,10 @@ COVER_IMGS = {
     'lone_treeM-1': 'lone_treeM-1.png', 'lone_treeB-0': 'lone_treeB-0.png',
     'lone_treeB-1': 'lone_treeB-1.png', 'shrub_lg': 'shrub_lg.png',
     'shrub_sm': 'shrub_sm.png', 'sm_pine': 'sm_pine.png',
-    'sm_tree': 'sm_tree.png'
+    'sm_tree': 'sm_tree.png', 'full_shadow': 'full_shadow.png'
 }
+
+FLASH_IMG = [
+            'crap_flash_up.png', 'crap_flash_dn.png',
+            'crap_flash_lt.png', 'crap_flash_rt.png'
+             ]
